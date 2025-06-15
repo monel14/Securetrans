@@ -1,0 +1,1653 @@
+k<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maquette - Plateforme de Transfert d'Argent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        .main-content-area { /* Renamed from main-content to avoid conflict */
+            transition: margin-left 0.3s ease-in-out;
+            flex-grow: 1; /* Ensures main content takes available space */
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500;
+            transition: background-color 0.2s ease-in-out; display: inline-flex;
+            align-items: center; justify-content: center;
+        }
+        .btn-xs { padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 0.25rem;}
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+        .btn-primary { background-color: #3b82f6; color: white; }
+        .btn-primary:hover { background-color: #2563eb; }
+        .btn-secondary { background-color: #6b7280; color: white; }
+        .btn-secondary:hover { background-color: #4b5563; }
+        .btn-success { background-color: #10b981; color: white; }
+        .btn-success:hover { background-color: #059669; }
+        .btn-danger { background-color: #ef4444; color: white; }
+        .btn-danger:hover { background-color: #dc2626; }
+        .btn-warning { background-color: #f59e0b; color: white; }
+        .btn-warning:hover { background-color: #d97706; }
+        .btn-info { background-color: #0ea5e9; color: white; }
+        .btn-info:hover { background-color: #0284c7; }
+        .btn-outline-secondary { background-color: transparent; color: #6b7280; border: 1px solid #6b7280; }
+        .btn-outline-secondary:hover { background-color: #6b7280; color: white; }
+
+        .table th, .table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        .table th { background-color: #f9fafb; font-weight: 600; }
+        .table-sm td, .table-sm th { padding: 0.5rem; font-size: 0.875rem; }
+
+
+        .badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .badge-success { background-color: #d1fae5; color: #065f46; }
+        .badge-warning { background-color: #fef3c7; color: #92400e; }
+        .badge-danger { background-color: #fee2e2; color: #991b1b; }
+        .badge-info { background-color: #cffafe; color: #0891b2; }
+        .badge-gray { background-color: #e5e7eb; color: #4b5563; }
+        .badge-purple { background-color: #ede9fe; color: #5b21b6; }
+
+
+        .form-input, .form-select, .form-textarea {
+            border: 1px solid #d1d5db; border-radius: 0.375rem;
+            padding: 0.75rem 1rem; width: 100%;
+        }
+        .form-input-sm, .form-select-sm { padding: 0.5rem 0.75rem; font-size:0.875rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151; }
+        .form-label-sm { font-size:0.875rem; margin-bottom: 0.25rem; }
+
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); display: flex; align-items: center;
+            justify-content: center; z-index: 50; overflow-y: auto; padding: 1rem;
+        }
+        .modal-content {
+            background-color: white; padding: 2rem; border-radius: 0.75rem;
+            width: 90%; max-width: 500px; /* Default max-width */
+            max-height: 90vh; overflow-y: auto;
+        }
+        .modal-lg { max-width: 800px; }
+        .modal-xl { max-width: 1140px; }
+
+        .tabs { border-bottom: 2px solid #e5e7eb; margin-bottom: 1.5rem; }
+        .tabs button {
+            padding: 0.75rem 1.25rem; border: none; background: none; cursor: pointer;
+            font-weight: 500; color: #6b7280; border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+        .tabs button.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+        .app-footer {
+            background-color: #1f2937; /* Dark Gray */
+            color: #d1d5db; /* Light Gray text */
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem; /* text-sm */
+            margin-top: auto; /* Pushes footer to bottom if content is short */
+        }
+        .app-footer a {
+            color: #9ca3af; /* Medium Gray for links */
+            text-decoration: none;
+        }
+        .app-footer a:hover {
+            color: #e5e7eb; /* Lighter Gray on hover */
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 p-4">
+        <div class="bg-white p-8 sm:p-12 rounded-xl shadow-2xl w-full max-w-md">
+            <div class="text-center mb-8">
+                <i class="fas fa-shield-alt text-5xl text-blue-600"></i>
+                <h1 class="text-3xl font-bold text-gray-800 mt-4">SecureTrans</h1>
+                <p class="text-gray-600">Connectez-vous à votre compte</p>
+            </div>
+            <form id="loginForm">
+                <div class="mb-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="votreadresse@email.com" value="agent.alice@example.com" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <input type="password" id="password" class="form-input" placeholder="********" value="password" required>
+                </div>
+                <div class="mb-6">
+                    <label for="role" class="form-label">Rôle</label>
+                    <select id="role" class="form-select">
+                        <option value="agent">Agent</option>
+                        <option value="chef_agence">Chef d’agence</option>
+                        <option value="admin_general">Administrateur général</option>
+                        <option value="sous_admin">Sous-administrateur</option>
+                        <option value="developpeur">Développeur</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-full text-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Se connecter
+                </button>
+            </form>
+            <p class="text-center text-sm text-gray-500 mt-6">
+                Mot de passe oublié ? <a href="#" class="text-blue-600 hover:underline">Réinitialiser</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="appContainer" class="hidden flex flex-col min-h-screen">
+        <div class="flex flex-grow">
+            <aside id="sidebar" class="sidebar w-64 bg-gray-800 text-gray-100 p-4 space-y-2 flex flex-col fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 z-30">
+                <div class="text-2xl font-semibold text-center py-3 border-b border-gray-700 flex items-center justify-center">
+                    <i class="fas fa-shield-alt mr-2 text-blue-400"></i>
+                    <span>SecureTrans</span>
+                </div>
+                <nav id="appNavigation" class="mt-2 flex-grow overflow-y-auto space-y-1">
+                    </nav>
+                <div class="mt-auto pt-2 border-t border-gray-700">
+                     <button id="logoutButton" class="btn btn-danger w-full">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                    </button>
+                </div>
+            </aside>
+
+            <main id="mainContentArea" class="main-content-area flex-1 p-6 md:ml-64 overflow-y-auto">
+                <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-300 bg-white shadow-sm -mx-6 px-6 -mt-6 pt-6 sticky top-0 z-20 md:shadow-none md:bg-transparent md:static md:pt-0 md:-mt-0 md:-mx-0 md:px-0">
+                    <div class="flex items-center">
+                        <button id="menuToggle" class="md:hidden text-gray-600 hover:text-gray-900 mr-3">
+                            <i class="fas fa-bars text-2xl"></i>
+                        </button>
+                        <h2 id="pageTitle" class="text-xl sm:text-2xl font-semibold text-gray-700">Tableau de Bord</h2>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative" id="notificationsContainer">
+                            <button class="text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleNotifications()">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span id="notificationBadge" class="absolute -top-1 -right-1 block h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center ring-2 ring-white">3</span>
+                            </button>
+                            <div id="notificationsDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-xl z-20 border">
+                                <div class="p-3 border-b font-semibold text-sm text-gray-700">Notifications Récentes</div>
+                                <div class="py-1 max-h-64 overflow-y-auto" id="notificationsList">
+                                    </div>
+                                <a href="#" id="seeAllNotificationsLink" class="block text-center p-2 text-sm text-blue-600 hover:bg-gray-100">Voir toutes les notifications</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" id="userAvatarHeader" alt="Avatar utilisateur" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2 object-cover">
+                            <div>
+                                <p id="userName" class="font-medium text-sm sm:text-base text-gray-700">Nom Utilisateur</p>
+                                <p id="userRoleDisplay" class="text-xs sm:text-sm text-gray-500">Rôle</p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <div id="pageContent">
+                    </div>
+            </main>
+        </div>
+        <footer class="app-footer md:ml-64">
+            <p>&copy; <span id="currentYear"></span> SecureTrans. Tous droits réservés.</p>
+            <p class="mt-1">
+                <a href="#" class="hover:underline">Aide</a> | 
+                <a href="#" class="hover:underline">Support Technique</a> | 
+                <a href="#" class="hover:underline">Politique de Confidentialité</a>
+            </p>
+        </footer>
+    </div>
+
+    <div id="agentNewOperationModal" class="modal hidden">
+        <div class="modal-content modal-lg">
+            <h3 class="text-xl font-semibold mb-4">Nouvelle Opération</h3>
+            <form id="agentNewOperationForm">
+                <div class="mb-4">
+                    <label class="form-label" for="agentOpType">Sélectionner le Type d'Opération</label>
+                    <select id="agentOpType" class="form-select">
+                        <option value="">-- Choisir un type --</option>
+                        </select>
+                </div>
+                <div id="agentOpDynamicFields" class="mb-4 p-4 border rounded-md bg-gray-50 min-h-[150px]">
+                    <p class="text-gray-500 italic">Les champs spécifiques à l'opération apparaîtront ici après sélection.</p>
+                    </div>
+                 <div class="mb-4">
+                    <label class="form-label" for="agentOpProof">Télécharger la Preuve de Transaction (si applicable)</label>
+                    <input type="file" id="agentOpProof" class="form-input">
+                    <p class="text-xs text-gray-500 mt-1">Formats: JPG, PNG, PDF. Max 2MB.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div class="p-3 bg-blue-50 rounded-md">
+                        <p class="text-sm text-blue-700">Votre Solde Actuel :</p>
+                        <p class="text-lg font-semibold text-blue-800"><span id="agentCurrentBalanceOpModal">0</span> XOF</p>
+                    </div>
+                    <div class="p-3 bg-green-50 rounded-md">
+                        <p class="text-sm text-green-700">Solde Après Opération (si validée) :</p>
+                        <p class="text-lg font-semibold text-green-800"><span id="agentBalanceAfterOpModal">--,--</span> XOF</p>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('agentNewOperationModal')">Annuler</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane mr-2"></i>Soumettre pour Validation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="agentRequestRechargeModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4">Demande de Recharge de Solde</h3>
+            <form id="agentRequestRechargeForm">
+                <div class="mb-4">
+                    <label class="form-label" for="agentRechargeAmountModal">Montant Souhaité</label>
+                    <input type="number" id="agentRechargeAmountModal" class="form-input" placeholder="Entrez le montant">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label" for="agentRechargeReasonModal">Motif/Commentaire (Optionnel)</label>
+                    <textarea id="agentRechargeReasonModal" class="form-textarea" rows="3" placeholder="Une brève justification..."></textarea>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('agentRequestRechargeModal')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Envoyer la Demande</button>
+                </div>
+                <div class="mt-6">
+                    <h4 class="text-md font-semibold mb-2 text-gray-700">Historique de vos demandes de recharge</h4>
+                    <div class="max-h-40 overflow-y-auto" id="agentRechargeHistoryTableContainer">
+                        </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="devEditOperationTypeModal" class="modal hidden">
+        <div class="modal-content modal-xl">
+            <h3 class="text-xl font-semibold mb-4" id="devOpTypeModalTitle">Créer/Éditer un Type d'Opération</h3>
+            <input type="hidden" id="editingOpTypeId">
+            <form id="devOperationTypeForm">
+                <div class="tabs">
+                    <button type="button" data-target="devOpTypeTabInfo" class="active">Informations Générales</button>
+                    <button type="button" data-target="devOpTypeTabFields">Champs du Formulaire</button>
+                    <button type="button" data-target="devOpTypeTabCommissions">Commissions</button>
+                </div>
+                <div class="tab-content">
+                    <div id="devOpTypeTabInfo" class="space-y-4 py-4">
+                        <div>
+                            <label class="form-label" for="devOpTypeName">Nom du Type d'Opération</label>
+                            <input type="text" id="devOpTypeName" class="form-input" placeholder="Ex: Transfert International">
+                        </div>
+                        <div>
+                            <label class="form-label" for="devOpTypeDescription">Description</label>
+                            <textarea id="devOpTypeDescription" class="form-textarea" rows="2" placeholder="Courte description de l'opération"></textarea>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="devOpTypeImpactsBalance" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-2">
+                            <label for="devOpTypeImpactsBalance" class="form-label mb-0">Cette opération impacte-t-elle les soldes ?</label>
+                        </div>
+                         <div>
+                            <label class="form-label" for="devOpTypeStatus">Statut du Type d'Opération</label>
+                            <select id="devOpTypeStatus" class="form-select">
+                                <option value="active">Actif</option>
+                                <option value="inactive">Inactif (non disponible pour nouvelles transactions)</option>
+                                <option value="archived">Archivé (conservé pour historique seulement)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="devOpTypeTabFields" class="hidden space-y-4 py-4">
+                        <p class="text-sm text-gray-600">Définissez les champs qui apparaîtront dans le formulaire pour ce type d'opération.</p>
+                        <div id="devOpTypeFieldsContainer" class="space-y-3 max-h-96 overflow-y-auto p-2 border rounded-md">
+                            </div>
+                        <button type="button" id="devOpTypeAddFieldBtn" class="btn btn-sm btn-outline-secondary"><i class="fas fa-plus mr-1"></i>Ajouter un Champ</button>
+                    </div>
+                    <div id="devOpTypeTabCommissions" class="hidden space-y-4 py-4">
+                         <p class="text-sm text-gray-600">Configurez comment les commissions sont calculées pour ce type d'opération.</p>
+                        <div>
+                            <label class="form-label" for="devOpCommissionType">Type de Commission</label>
+                            <select id="devOpCommissionType" class="form-select">
+                                <option value="none">Aucune commission</option>
+                                <option value="fixed">Fixe</option>
+                                <option value="percentage">Pourcentage</option>
+                                <option value="tiers">Paliers</option>
+                            </select>
+                        </div>
+                        <div id="devOpCommissionFixedContainer" class="hidden">
+                            <label class="form-label">Montant Fixe de la Commission (XOF)</label><input type="number" id="devOpCommissionFixedAmount" class="form-input" placeholder="Ex: 500">
+                        </div>
+                        <div id="devOpCommissionPercentageContainer" class="hidden">
+                             <label class="form-label">Pourcentage de la Commission (%)</label><input type="number" id="devOpCommissionPercentageRate" step="0.1" class="form-input" placeholder="Ex: 2 (pour 2%)">
+                        </div>
+                        <div id="devOpCommissionTiersContainer" class="hidden space-y-2">
+                            <p class="font-medium">Définir les Paliers:</p>
+                            <div id="devOpCommissionTiersList">
+                                </div>
+                            <button type="button" id="devOpTypeAddTierBtn" class="btn btn-sm btn-outline-secondary"><i class="fas fa-plus mr-1"></i>Ajouter Palier</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6 pt-4 border-t">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('devEditOperationTypeModal')">Annuler</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save mr-2"></i>Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="assignToSubAdminModal" class="modal hidden">
+        <div class="modal-content max-w-md">
+            <h3 class="text-xl font-semibold mb-4">Assigner la Tâche</h3>
+            <form id="assignTaskForm">
+                <input type="hidden" id="taskIdToAssign">
+                <input type="hidden" id="taskTypeToAssign">
+                <div class="mb-4">
+                    <label class="form-label" for="subAdminSelect">Choisir un Sous-Administrateur</label>
+                    <select id="subAdminSelect" class="form-select">
+                        </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label" for="assignNotes">Notes (optionnel)</label>
+                    <textarea id="assignNotes" class="form-textarea" rows="2"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('assignToSubAdminModal')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Assigner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="viewProofModal" class="modal hidden">
+        <div class="modal-content modal-lg">
+            <h3 class="text-xl font-semibold mb-4">Preuve de Transaction</h3>
+            <img id="proofImage" src="https://placehold.co/600x400/cccccc/969696?text=Preuve+Transaction" alt="Preuve de transaction" class="w-full h-auto rounded-md">
+            <div class="mt-4 text-right">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('viewProofModal')">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // DOM Elements
+    const loginPage = document.getElementById('loginPage');
+    const appContainer = document.getElementById('appContainer');
+    const loginForm = document.getElementById('loginForm');
+    const roleSelect = document.getElementById('role');
+    const appNavigation = document.getElementById('appNavigation');
+    const pageContent = document.getElementById('pageContent');
+    const pageTitle = document.getElementById('pageTitle');
+    const userNameDisplay = document.getElementById('userName');
+    const userRoleDisplay = document.getElementById('userRoleDisplay');
+    const userAvatarHeader = document.getElementById('userAvatarHeader');
+    const logoutButton = document.getElementById('logoutButton');
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const mainContentArea = document.getElementById('mainContentArea');
+    const currentYearSpan = document.getElementById('currentYear');
+    if(currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+
+    let currentUserRole = ''; 
+    let currentUserId = '';
+
+    // --- MOCK DATA ---
+    const mockAgencies = [
+        { id: 'AG001', name: 'Agence Dakar Centre', chefId: 'chef_charles' },
+        { id: 'AG002', name: 'Agence Pikine Tally Boubess', chefId: 'chef_fatou' },
+        { id: 'AG003', name: 'Agence Thiès Nguinth', chefId: 'chef_aliou' },
+        { id: 'AG004', name: 'Agence Mbour Somone', chefId: 'chef_bineta' },
+    ];
+
+    const users = {
+        'agent_alice': { id: 'agent_alice', name: 'Alice Diop', email: 'agent.alice@example.com', role: 'agent', agencyId: 'AG001', solde: 150000, commissions_mois_estimees: 12500, commissions_dues: 28000, avatarSeed: 'Alice' },
+        'agent_bob': { id: 'agent_bob', name: 'Bob Fall', email: 'agent.bob@example.com', role: 'agent', agencyId: 'AG001', solde: 75000, commissions_mois_estimees: 8000, commissions_dues: 15000, avatarSeed: 'Bob' },
+        'agent_carla': { id: 'agent_carla', name: 'Carla Ndiaye', email: 'agent.carla@example.com', role: 'agent', agencyId: 'AG002', solde: 210000, commissions_mois_estimees: 18000, commissions_dues: 45000, avatarSeed: 'Carla' },
+        'agent_david': { id: 'agent_david', name: 'David Sarr', email: 'agent.david@example.com', role: 'agent', agencyId: 'AG003', solde: 95000, commissions_mois_estimees: 9200, commissions_dues: 18300, avatarSeed: 'David' },
+
+        'chef_charles': { id: 'chef_charles', name: 'Charles Mendy', email: 'chef.charles@example.com', role: 'chef_agence', agencyId: 'AG001', solde: 1250000, commissions_perso_dues: 50000, volume_agence_mois: 3500000, commissions_agence_mois: 215700, agents_actifs: 2, avatarSeed: 'Charles' },
+        'chef_fatou': { id: 'chef_fatou', name: 'Fatou Beye', email: 'chef.fatou@example.com', role: 'chef_agence', agencyId: 'AG002', solde: 980000, commissions_perso_dues: 42000, volume_agence_mois: 2800000, commissions_agence_mois: 180500, agents_actifs: 1, avatarSeed: 'Fatou' },
+        'chef_aliou': { id: 'chef_aliou', name: 'Aliou Diallo', email: 'chef.aliou@example.com', role: 'chef_agence', agencyId: 'AG003', solde: 1500000, commissions_perso_dues: 65000, volume_agence_mois: 4200000, commissions_agence_mois: 280000, agents_actifs: 1, avatarSeed: 'Aliou' },
+        'chef_bineta': { id: 'chef_bineta', name: 'Bineta Gueye', email: 'chef.bineta@example.com', role: 'chef_agence', agencyId: 'AG004', solde: 750000, commissions_perso_dues: 30000, volume_agence_mois: 1900000, commissions_agence_mois: 120000, agents_actifs: 0, avatarSeed: 'Bineta' },
+
+        'admin_adam': { id: 'admin_adam', name: 'Adam Ba', email: 'admin.adam@example.com', role: 'admin_general', avatarSeed: 'Adam' },
+        'sous_admin_sophie': { id: 'sous_admin_sophie', name: 'Sophie Camara', email: 'sa.sophie@example.com', role: 'sous_admin', avatarSeed: 'Sophie' },
+        'sous_admin_omar': { id: 'sous_admin_omar', name: 'Omar Sy', email: 'sa.omar@example.com', role: 'sous_admin', avatarSeed: 'Omar' },
+        'dev_david': { id: 'dev_david', name: 'David Moreau', email: 'dev.david@example.com', role: 'developpeur', avatarSeed: 'DevD' },
+    };
+    
+    const mockOperationTypes = [
+        { id: 'op_transfert_nat', name: 'Transfert National', description: 'Envoi d\'argent domestique', impactsBalance: true, status: 'active',
+          fields: [
+            { id: 'fld_tn_montant', label: 'Montant du Transfert', name: 'montant_transfert', type: 'number', required: true, obsolete: false, placeholder: 'Ex: 50000' },
+            { id: 'fld_tn_tel_benef', label: 'Numéro de téléphone bénéficiaire', name: 'tel_beneficiaire', type: 'tel', required: true, obsolete: false, placeholder: 'Ex: 771234567' },
+            { id: 'fld_tn_nom_benef', label: 'Nom complet du bénéficiaire', name: 'nom_beneficiaire', type: 'text', required: true, obsolete: false, placeholder: 'Ex: Moussa Fall' },
+            { id: 'fld_tn_motif', label: 'Motif (optionnel)', name: 'motif_transfert', type: 'text', required: false, obsolete: false, placeholder: 'Ex: Loyer, Cadeau' },
+          ],
+          commissionConfig: { type: 'tiers', tiers: [{from: 0, to: 50000, commission: '250'}, {from: 50001, to: 200000, commission: '1%'}, {from: 200001, to: Infinity, commission: '0.8%'}] }
+        },
+        { id: 'op_paiement_sde', name: 'Paiement Facture SDE', description: 'Règlement facture eau SDE', impactsBalance: true, status: 'active',
+          fields: [
+            { id: 'fld_sde_ref_client', label: 'Référence Client SDE', name: 'ref_client_sde', type: 'text', required: true, obsolete: false, placeholder: 'Ex: C123456789' },
+            { id: 'fld_sde_num_facture', label: 'Numéro de Facture', name: 'num_facture_sde', type: 'text', required: true, obsolete: false, placeholder: 'Ex: F202505-001' },
+            { id: 'fld_sde_montant', label: 'Montant à Payer', name: 'montant_sde', type: 'number', required: true, obsolete: false, placeholder: 'Ex: 12500' },
+          ],
+          commissionConfig: { type: 'fixed', amount: 100 }
+        },
+        { id: 'op_reabo_canal', name: 'Réabonnement Canal+', description: 'Réabonnement bouquet Canal+', impactsBalance: true, status: 'active',
+          fields: [
+            { id: 'fld_canal_num_decodeur', label: 'Numéro de Décodeur', name: 'num_decodeur_canal', type: 'text', required: true, obsolete: false, placeholder: 'Ex: 123456789012' },
+            { id: 'fld_canal_formule', label: 'Formule Choisie', name: 'formule_canal', type: 'select', options: ['Access', 'Evasion', 'Tout Canal+'], required: true, obsolete: false },
+            { id: 'fld_canal_duree', label: 'Durée (mois)', name: 'duree_canal', type: 'number', required: true, obsolete: false, placeholder: '1', defaultValue: 1 },
+          ],
+          commissionConfig: { type: 'percentage', rate: 1.5 }
+        },
+        { id: 'op_info_solde_ext', name: 'Consultation Solde Externe', description: 'Service informatif, ne modifie pas le solde', impactsBalance: false, status: 'inactive',
+          fields: [
+            { id: 'fld_solde_num_compte', label: 'Numéro de Compte Externe', name: 'num_compte_externe', type: 'text', required: true, obsolete: false },
+          ],
+          commissionConfig: { type: 'none' }
+        },
+         { id: 'op_paiement_woyofal', name: 'Paiement Woyofal', description: 'Recharge compteur Woyofal', impactsBalance: true, status: 'active',
+          fields: [
+            { id: 'fld_woyofal_num_compteur', label: 'Numéro de Compteur', name: 'num_compteur_woyofal', type: 'text', required: true, obsolete: false, placeholder: 'Ex: 987654321' },
+            { id: 'fld_woyofal_montant', label: 'Montant à Recharger', name: 'montant_woyofal', type: 'number', required: true, obsolete: false, placeholder: 'Ex: 5000' },
+          ],
+          commissionConfig: { type: 'fixed', amount: 75 }
+        },
+    ];
+    
+    const agencyOperationAccess = {
+        'AG001': ['op_transfert_nat', 'op_paiement_sde', 'op_reabo_canal', 'op_paiement_woyofal', 'op_info_solde_ext'],
+        'AG002': ['op_transfert_nat', 'op_paiement_sde', 'op_paiement_woyofal'],
+        'AG003': ['op_transfert_nat', 'op_reabo_canal'],
+        'AG004': ['op_transfert_nat'],
+    };
+
+
+    let mockTransactions = [
+        { id: 'TRN001', date: '2025-05-07 10:30', agentId: 'agent_alice', opTypeId: 'op_transfert_nat', data: { montant_transfert: 25000, tel_beneficiaire: '771234567', nom_beneficiaire: 'Moussa Diop' }, montant_principal: 25000, frais: 250, montant_total: 25250, statut: 'Validé', preuveUrl: 'https://placehold.co/300x200/EFEFEF/AAAAAA&text=Preuve_TRN001', commission_generee: 250, validateurId: 'admin_adam', motif_rejet: null, assignedTo: 'admin_adam' },
+        { id: 'TRN002', date: '2025-05-06 14:15', agentId: 'agent_bob', opTypeId: 'op_paiement_sde', data: { ref_client_sde: 'C987654', num_facture_sde: 'F05-002', montant_sde: 15000 }, montant_principal: 15000, frais: 100, montant_total: 15100, statut: 'En attente de validation', preuveUrl: null, commission_generee: 100, validateurId: null, motif_rejet: null, assignedTo: null },
+        { id: 'TRN003', date: '2025-05-05 09:00', agentId: 'agent_alice', opTypeId: 'op_reabo_canal', data: { num_decodeur_canal: '0123456789', formule_canal: 'Evasion', duree_canal: 1 }, montant_principal: 10000, frais: 150, montant_total: 10150, statut: 'En attente de validation', preuveUrl: 'https://placehold.co/300x200/EFEFEF/AAAAAA&text=Preuve_TRN003', commission_generee: 150, validateurId: null, motif_rejet: null, assignedTo: 'sous_admin_sophie' },
+        { id: 'TRN004', date: '2025-05-04 16:45', agentId: 'agent_carla', opTypeId: 'op_transfert_nat', data: { montant_transfert: 75000, tel_beneficiaire: '780001122', nom_beneficiaire: 'Awa Gueye' }, montant_principal: 75000, frais: 750, montant_total: 75750, statut: 'Rejeté', preuveUrl: 'https://placehold.co/300x200/EFEFEF/AAAAAA&text=Preuve_TRN004', commission_generee: 0, validateurId: 'admin_adam', motif_rejet: 'Preuve illisible', assignedTo: 'admin_adam' },
+        { id: 'TRN005', date: '2025-05-08 11:00', agentId: 'agent_david', opTypeId: 'op_paiement_woyofal', data: { num_compteur_woyofal: '98765000', montant_woyofal: 5000 }, montant_principal: 5000, frais: 75, montant_total: 5075, statut: 'En attente de validation', preuveUrl: null, commission_generee: 75, validateurId: null, motif_rejet: null, assignedTo: null },
+        { id: 'TRN006', date: '2025-05-08 15:20', agentId: 'agent_alice', opTypeId: 'op_transfert_nat', data: { montant_transfert: 120000, tel_beneficiaire: '773334455', nom_beneficiaire: 'Omar Sy' }, montant_principal: 120000, frais: 1200, montant_total: 121200, statut: 'Validé', preuveUrl: 'https://placehold.co/300x200/EFEFEF/AAAAAA&text=Preuve_TRN006', commission_generee: 1200, validateurId: 'sous_admin_sophie', motif_rejet: null, assignedTo: 'sous_admin_sophie' },
+        { id: 'TRN007', date: '2025-05-09 08:10', agentId: 'agent_bob', opTypeId: 'op_reabo_canal', data: { num_decodeur_canal: '1122334455', formule_canal: 'Access', duree_canal: 3 }, montant_principal: 15000, frais: 225, montant_total: 15225, statut: 'En attente de validation', preuveUrl: 'https://placehold.co/300x200/EFEFEF/AAAAAA&text=Preuve_TRN007', commission_generee: 225, validateurId: null, motif_rejet: null, assignedTo: null },
+    ];
+
+    let mockRequests = [
+        { id: 'REQ001', date: '2025-05-08 10:00', demandeurId: 'chef_charles', type: 'Demande de Recharge (Chef Agence)', sujet: 'Recharge solde agence Dakar Centre : 1,000,000 XOF', description: 'Pour couvrir les opérations de la semaine.', statut: 'Non assignée', assignedTo: null, reponse: null },
+        { id: 'REQ002', date: '2025-05-07 15:30', demandeurId: 'agent_carla', type: 'Signalement Problème', sujet: 'Erreur calcul commission TRN004', description: 'La commission pour la transaction TRN004 semble incorrecte.', statut: 'Assignée', assignedTo: 'sous_admin_omar', reponse: 'Vérification en cours.' },
+        { id: 'REQ003', date: '2025-05-06 11:00', demandeurId: 'agent_alice', type: 'Suggestion', sujet: 'Ajouter option "Transfert Multiple"', description: 'Serait utile pour envoyer à plusieurs bénéficiaires en une fois.', statut: 'Traité', assignedTo: 'admin_adam', reponse: 'Merci pour la suggestion, nous allons l\'étudier.' },
+        { id: 'REQ004', date: '2025-05-09 09:15', demandeurId: 'chef_fatou', type: 'Demande de Recharge (Chef Agence)', sujet: 'Recharge solde agence Pikine : 750,000 XOF', description: 'Besoin urgent.', statut: 'En cours de traitement', assignedTo: 'admin_adam', reponse: 'Demande prise en compte.' },
+        { id: 'REQ005', date: '2025-05-09 14:00', demandeurId: 'agent_david', type: 'Demande Infos', sujet: 'Plafond transfert international?', description: 'Quel est le plafond max pour un transfert vers la France?', statut: 'Non assignée', assignedTo: null, reponse: null },
+    ];
+    
+    let mockAgentRechargeRequests = [ // Agent -> Chef Agence
+        { id: 'ARR001', date: '2025-05-10 09:00', agentId: 'agent_alice', chefAgenceId: 'chef_charles', montant: 50000, motif: 'Approvisionnement semaine', statut: 'En attente Chef Agence'},
+        { id: 'ARR002', date: '2025-05-09 14:00', agentId: 'agent_bob', chefAgenceId: 'chef_charles', montant: 30000, motif: '', statut: 'Approuvée'},
+        { id: 'ARR003', date: '2025-05-08 11:00', agentId: 'agent_carla', chefAgenceId: 'chef_fatou', montant: 70000, motif: 'Grosses transactions prévues', statut: 'Rejetée'},
+    ];
+
+    const mockNotificationsData = [
+        { id: 1, text: "Votre recharge de 50,000 XOF (ARR002) a été approuvée par Charles Mendy.", time: "il y a 5 min", read: false, icon: "fa-check-circle text-green-500", userId: 'agent_bob' },
+        { id: 2, text: "Transaction TRN007 en attente de validation.", time: "il y a 1 heure", read: false, icon: "fa-hourglass-half text-yellow-500", userId: 'agent_bob' }, 
+        { id: 3, text: "Nouvelle demande de recharge de l'agent Alice Diop (ARR001).", time: "il y a 2 heures", read: false, icon: "fa-wallet text-blue-500", userId: 'chef_charles' }, 
+        { id: 4, text: "Maintenance système prévue ce soir à 23h.", time: "il y a 5 heures", read: true, icon: "fa-tools text-gray-500", userId: 'all' }, 
+        { id: 5, text: "La transaction TRN003 vous a été assignée.", time: "il y a 30 min", read: false, icon: "fa-user-tag text-purple-500", userId: 'sous_admin_sophie' }, 
+        { id: 6, text: "La requête REQ002 (Erreur calcul commission) vous a été assignée.", time: "il y a 1h30", read: false, icon: "fa-user-tag text-purple-500", userId: 'sous_admin_omar' },
+        { id: 7, text: "Nouvelle transaction TRN007 en attente de validation (Agent: Bob Fall).", time: "il y a 1 heure", read: false, icon: "fa-hourglass-half text-yellow-500", userId: 'admin_adam' }, 
+        { id: 8, text: "Nouvelle requête REQ005 (Demande Infos) non assignée.", time: "il y a 45 min", read: false, icon: "fa-inbox text-red-500", userId: 'admin_adam' }, 
+    ];
+
+    // --- NAVIGATION LINKS DEFINITION ---
+    // This was the missing part causing the ReferenceError
+    const navigationLinks = {
+        agent: [
+            { label: 'Tableau de Bord', icon: 'fa-tachometer-alt', contentFn: getAgentDashboardContent },
+            { label: 'Nouvelle Opération', icon: 'fa-plus-circle', action: () => openModal('agentNewOperationModal') },
+            { label: 'Historique Opérations', icon: 'fa-history', contentFn: getAgentTransactionHistoryContent },
+            { label: 'Mes Commissions', icon: 'fa-percent', contentFn: getAgentCommissionsContent },
+            { label: 'Demander Recharge', icon: 'fa-hand-holding-usd', action: () => openModal('agentRequestRechargeModal') },
+            { label: 'Signaler Problème', icon: 'fa-exclamation-triangle', contentFn: getReportProblemContent }
+        ],
+        chef_agence: [
+            { label: 'Tableau de Bord', icon: 'fa-chart-line', contentFn: getChefAgenceDashboardContent },
+            { label: 'Gérer mes Agents', icon: 'fa-users-cog', contentFn: getChefManageAgentsContent },
+            { label: 'Initier Opération', icon: 'fa-paper-plane', action: () => openModal('agentNewOperationModal') }, 
+            { label: 'Recharges Agents', icon: 'fa-wallet', contentFn: getChefManageAgentRechargesContent },
+            { label: 'Mes Commissions', icon: 'fa-coins', contentFn: getChefCommissionsContent },
+            { label: 'Demander Recharge (Admin)', icon: 'fa-university', action: () => { /* Placeholder for chef recharge modal to Admin */ } }
+        ],
+        admin_general: [
+            { label: 'Tableau de Bord Global', icon: 'fa-globe-americas', contentFn: getAdminGeneralDashboardContent },
+            { label: 'Validation Transactions', icon: 'fa-check-double', contentFn: () => getAdminValidationTransactionsContent('unassigned') },
+            { label: 'Gestion des Requêtes', icon: 'fa-envelope-open-text', contentFn: () => getAdminManageRequestsContent('unassigned') },
+            { label: 'Gestion des Agences', icon: 'fa-building', contentFn: getAdminManageAgenciesContent },
+            { label: 'Gestion Sous-Admins', icon: 'fa-user-shield', contentFn: getAdminManageSubAdminsContent },
+            { label: 'Attribution Services Agences', icon: 'fa-store-alt-slash', contentFn: getAdminAssignOpsToAgencyContent },
+            { label: 'Configuration Commissions', icon: 'fa-cogs', contentFn: getConfigCommissionsContent },
+            { label: 'Journal d\'Audit', icon: 'fa-clipboard-list', contentFn: getAuditLogContent }
+        ],
+        sous_admin: [
+            { label: 'Tableau de Bord', icon: 'fa-tachometer-alt', contentFn: getSousAdminDashboardContent },
+            { label: 'Validation Transactions', icon: 'fa-check-square', contentFn: () => getSousAdminValidationTransactionsContent('unassigned') },
+            { label: 'Gestion des Requêtes', icon: 'fa-headset', contentFn: () => getSousAdminManageRequestsContent('unassigned') }
+        ],
+        developpeur: [
+            { label: 'Dashboard Technique', icon: 'fa-server', contentFn: getDevDashboardContent },
+            { label: 'Types d\'Opérations', icon: 'fa-cogs', contentFn: getDevManageOperationTypesContent },
+            { label: 'Configuration Globale', icon: 'fa-tools', contentFn: getDevSystemConfigContent },
+            { label: 'Journaux d\'Erreurs', icon: 'fa-bug', contentFn: getDevErrorLogsContent }
+        ]
+    };
+    // --- END OF NAVIGATION LINKS DEFINITION ---
+
+
+    function renderNotifications() {
+        const list = document.getElementById('notificationsList');
+        const badge = document.getElementById('notificationBadge');
+        if (!list || !badge) return;
+
+        list.innerHTML = ''; 
+        let unreadCount = 0;
+        const userNotifications = mockNotificationsData.filter(n => (n.userId === currentUserId || n.userId === 'all') && !n.read);
+        unreadCount = userNotifications.length;
+        
+        const displayNotifications = mockNotificationsData
+            .filter(n => n.userId === currentUserId || n.userId === 'all')
+            .sort((a,b) => b.id - a.id) 
+            .slice(0, 5);
+
+        displayNotifications.forEach(notif => {
+            const item = document.createElement('a');
+            item.href = "#"; 
+            item.className = `block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${!notif.read ? 'font-semibold bg-blue-50' : ''}`;
+            item.innerHTML = `
+                <div class="flex items-start">
+                    <i class="fas ${notif.icon} mr-3 mt-1"></i>
+                    <div>
+                        <p class="${!notif.read ? 'text-gray-800' : 'text-gray-600'}">${notif.text}</p>
+                        <p class="text-xs text-gray-400">${notif.time}</p>
+                    </div>
+                </div>`;
+            item.onclick = (e) => {
+                e.preventDefault();
+                const originalNotif = mockNotificationsData.find(n => n.id === notif.id);
+                if (originalNotif) originalNotif.read = true;
+                renderNotifications(); 
+            };
+            list.appendChild(item);
+        });
+        badge.textContent = unreadCount;
+        badge.classList.toggle('hidden', unreadCount === 0);
+    }
+
+    function toggleNotifications() {
+        const dropdown = document.getElementById('notificationsDropdown');
+        if (dropdown) dropdown.classList.toggle('hidden');
+    }
+    
+    document.addEventListener('click', function(event) {
+        const notificationsContainer = document.getElementById('notificationsContainer');
+        const notificationsDropdown = document.getElementById('notificationsDropdown');
+        if (notificationsContainer && notificationsDropdown && !notificationsContainer.contains(event.target)) {
+            notificationsDropdown.classList.add('hidden');
+        }
+    });
+
+
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const selectedRoleValue = roleSelect.value; 
+        
+        currentUserId = Object.keys(users).find(id => users[id].role === selectedRoleValue && users[id].email === document.getElementById('email').value);
+        
+        if (!currentUserId) { 
+            currentUserId = Object.keys(users).find(id => users[id].role === selectedRoleValue);
+        }
+
+        if (!currentUserId) {
+            alert('Aucun utilisateur trouvé pour ce rôle avec cet email (pour la démo).');
+            return;
+        }
+        
+        currentUserRole = users[currentUserId].role;
+        const user = users[currentUserId];
+
+        loginPage.classList.add('hidden');
+        appContainer.classList.remove('hidden');
+        userNameDisplay.textContent = user.name;
+        userRoleDisplay.textContent = roleSelect.options[roleSelect.selectedIndex].text;
+        userAvatarHeader.src = `https://placehold.co/40x40/E2E8F0/4A5568?text=${user.avatarSeed.substring(0,1)}`;
+
+
+        loadNavigation(currentUserRole); // This should now work
+        renderNotifications(); 
+        if (navigationLinks[currentUserRole] && navigationLinks[currentUserRole].length > 0) {
+             const firstLink = navigationLinks[currentUserRole][0];
+             if (firstLink.contentFn) {
+                loadContent(firstLink.label, firstLink.contentFn);
+             } else if (firstLink.action) {
+                firstLink.action();
+                const fallbackLink = navigationLinks[currentUserRole].find(l => l.contentFn);
+                if(fallbackLink) loadContent(fallbackLink.label, fallbackLink.contentFn);
+                else pageContent.innerHTML = createCard("Action Effectuée", "Sélectionnez une autre option.", "fa-check-circle");
+             }
+        }
+    });
+    
+    logoutButton.addEventListener('click', () => {
+        appContainer.classList.add('hidden');
+        loginPage.classList.remove('hidden');
+        appNavigation.innerHTML = ''; 
+        pageContent.innerHTML = ''; 
+        currentUserRole = '';
+        currentUserId = '';
+        document.getElementById('notificationsDropdown').classList.add('hidden');
+        document.getElementById('email').value = "agent.alice@example.com"; 
+        roleSelect.value = "agent"; 
+    });
+
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+        if (sidebar.classList.contains('-translate-x-full')) {
+            mainContentArea.classList.remove('md:ml-64');
+        } else {
+            mainContentArea.classList.add('md:ml-64');
+        }
+    });
+    
+    if (window.innerWidth >= 768 && !sidebar.classList.contains('-translate-x-full')) {
+        mainContentArea.classList.add('md:ml-64');
+    }
+
+
+    function loadNavigation(role) {
+        appNavigation.innerHTML = '';
+        const links = navigationLinks[role]; // This should now be defined
+        if (links) {
+            links.forEach(link => {
+                const linkElement = document.createElement('a');
+                linkElement.href = '#';
+                linkElement.className = 'flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-gray-700 transition-colors duration-200 text-sm group';
+                linkElement.innerHTML = `<i class="fas ${link.icon} w-5 text-center text-gray-400 group-hover:text-gray-200"></i><span class="text-gray-200 group-hover:text-white">${link.label}</span>`;
+                linkElement.onclick = (e) => {
+                    e.preventDefault();
+                    if (link.contentFn) {
+                        loadContent(link.label, link.contentFn);
+                    } else if (link.action) {
+                        link.action();
+                    }
+                    if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+                        sidebar.classList.add('-translate-x-full');
+                        mainContentArea.classList.remove('md:ml-64');
+                    }
+                };
+                appNavigation.appendChild(linkElement);
+            });
+        }
+    }
+
+    function loadContent(title, contentFunction) {
+        pageTitle.textContent = title;
+        pageContent.innerHTML = contentFunction();
+        attachTabEventListeners(); 
+        if (title === "Nouvelle Opération") { 
+            setupNewOperationFormDynamicFields();
+        }
+        if (title === "Types d'Opérations" && currentUserRole === 'developpeur') {
+            setupDevOperationTypeModalTabsAndForm();
+        }
+        if (title === "Demander Recharge" && currentUserRole === 'agent') {
+            populateAgentRechargeHistory();
+        }
+        if (title === "Validation Transactions" || title === "Gestion des Requêtes") {
+            const tabsInContent = pageContent.querySelectorAll('.tabs button[data-target]');
+            if (tabsInContent.length > 0) {
+                attachTabEventListeners(); 
+                const defaultActiveButton = Array.from(tabsInContent).find(btn => btn.classList.contains('active'));
+                if (defaultActiveButton) defaultActiveButton.click(); else if(tabsInContent[0]) tabsInContent[0].click();
+            }
+        }
+    }
+    
+    function attachTabEventListeners() {
+        const tabButtons = document.querySelectorAll('.tabs button[data-target]'); 
+        tabButtons.forEach(button => {
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+
+            newButton.addEventListener('click', () => {
+                const parentTabs = newButton.closest('.tabs');
+                if (!parentTabs) return;
+                const tabContainer = parentTabs.nextElementSibling; 
+                if (!tabContainer || !tabContainer.classList.contains('tab-content')) return;
+
+                const targetTabId = newButton.dataset.target;
+
+                parentTabs.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                newButton.classList.add('active');
+
+                Array.from(tabContainer.children).forEach(contentPane => {
+                    if (contentPane.id === targetTabId) {
+                        contentPane.classList.remove('hidden');
+                    } else {
+                        contentPane.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    }
+
+    function createCard(title, content, iconClass = 'fa-info-circle', cardClasses = 'mb-6') {
+        return `
+            <div class="card ${cardClasses}">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                    <i class="fas ${iconClass} mr-3 text-blue-500"></i>${title}
+                </h3>
+                ${content}
+            </div>
+        `;
+    }
+    
+    function createTable(headers, rowsData, caption = "", tableClasses = "w-full table") {
+        let headerHtml = headers.map(h => `<th>${h}</th>`).join('');
+        let bodyHtml = rowsData.map(row => {
+            let cellsHtml = row.map(cell => `<td>${cell || '-'}</td>`).join(''); 
+            return `<tr>${cellsHtml}</tr>`;
+        }).join('');
+        if (rowsData.length === 0) {
+            bodyHtml = `<tr><td colspan="${headers.length}" class="text-center text-gray-500 py-4">Aucune donnée disponible.</td></tr>`;
+        }
+
+        return `
+            ${caption ? `<p class="text-sm text-gray-600 mb-2">${caption}</p>` : ''}
+            <div class="overflow-x-auto bg-white rounded-lg shadow">
+                <table class="${tableClasses}">
+                    <thead><tr>${headerHtml}</tr></thead>
+                    <tbody>${bodyHtml}</tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    function openModal(modalId) { document.getElementById(modalId)?.classList.remove('hidden'); }
+    function closeModal(modalId) { document.getElementById(modalId)?.classList.add('hidden'); }
+    
+    window.onclick = function(event) {
+        document.querySelectorAll('.modal').forEach(modal => {
+            if (event.target == modal) modal.classList.add('hidden');
+        });
+    }
+    
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return `${date.toLocaleDateString('fr-FR')} ${date.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}`;
+    }
+    
+    function formatAmount(amount) {
+        return amount != null ? Number(amount).toLocaleString('fr-FR') + ' XOF' : '-';
+    }
+
+    // --- AGENT ---
+    function getAgentDashboardContent() {
+        const user = users[currentUserId];
+        const agentTransactions = mockTransactions.filter(t => t.agentId === user.id);
+        const latestOps = agentTransactions.slice(0, 3);
+        const opsTableHeaders = ['Date', 'Type', 'Montant', 'Statut'];
+        const opsTableRows = latestOps.map(op => {
+            const opType = mockOperationTypes.find(ot => ot.id === op.opTypeId);
+            return [
+                formatDate(op.date).split(' ')[0], 
+                opType ? opType.name : 'N/A', 
+                formatAmount(op.montant_principal), 
+                `<span class="badge ${op.statut === 'Validé' ? 'badge-success' : (op.statut.includes('En attente') ? 'badge-warning' : 'badge-danger')}">${op.statut}</span>`
+            ];
+        });
+
+        return `
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                ${createCard('Solde Actuel', `<p class="text-3xl font-bold text-green-600">${formatAmount(user.solde)}</p>`, 'fa-wallet', '')}
+                ${createCard('Commissions Mois (Estimées)', `<p class="text-2xl font-semibold text-blue-600">${formatAmount(user.commissions_mois_estimees)}</p>`, 'fa-percent', '')}
+                ${createCard('Commissions Totales Dues', `<p class="text-2xl font-semibold text-purple-600">${formatAmount(user.commissions_dues)}</p>`, 'fa-coins', '')}
+            </div>
+            <div class="mb-6">
+                ${createCard('Actions Rapides', `
+                    <div class="flex flex-wrap gap-3">
+                        <button class="btn btn-primary" onclick="openModal('agentNewOperationModal')"><i class="fas fa-plus-circle mr-2"></i>Nouvelle Opération</button>
+                        <button class="btn btn-success" onclick="openModal('agentRequestRechargeModal')"><i class="fas fa-hand-holding-usd mr-2"></i>Demander une Recharge</button>
+                    </div>
+                `, 'fa-bolt', '')}
+            </div>
+            <div class="mb-6">
+                ${createCard('Dernières Opérations', createTable(opsTableHeaders, opsTableRows, '', 'w-full table table-sm') + '<div class="mt-3 text-right"><a href="#" onclick="loadContent(\'Historique des Opérations\', getAgentTransactionHistoryContent)" class="text-blue-600 hover:underline text-sm">Voir tout l\'historique <i class="fas fa-arrow-right text-xs"></i></a></div>', 'fa-receipt', '')}
+            </div>
+        `;
+    }
+
+    function setupNewOperationFormDynamicFields() {
+        const opTypeSelect = document.getElementById('agentOpType');
+        const dynamicFieldsContainer = document.getElementById('agentOpDynamicFields');
+        const currentBalanceSpan = document.getElementById('agentCurrentBalanceOpModal');
+        const balanceAfterOpSpan = document.getElementById('agentBalanceAfterOpModal');
+        
+        const user = users[currentUserId];
+        if (!user) return;
+
+        if(currentBalanceSpan) currentBalanceSpan.textContent = user.solde.toLocaleString();
+        if(balanceAfterOpSpan) balanceAfterOpSpan.textContent = '--,--';
+
+        opTypeSelect.innerHTML = '<option value="">-- Choisir un type --</option>'; 
+        const allowedOpTypeIds = agencyOperationAccess[user.agencyId] || [];
+        allowedOpTypeIds.forEach(opTypeId => {
+            const opType = mockOperationTypes.find(ot => ot.id === opTypeId && ot.status === 'active');
+            if (opType) {
+                const option = document.createElement('option');
+                option.value = opType.id;
+                option.textContent = opType.name;
+                opTypeSelect.appendChild(option);
+            }
+        });
+        
+        opTypeSelect.addEventListener('change', function() {
+            dynamicFieldsContainer.innerHTML = '<p class="text-gray-500 italic">Les champs spécifiques à l\'opération apparaîtront ici après sélection.</p>'; 
+            if (this.value) {
+                const selectedOpType = mockOperationTypes.find(ot => ot.id === this.value);
+                if (selectedOpType && selectedOpType.fields) {
+                    dynamicFieldsContainer.innerHTML = ''; 
+                    selectedOpType.fields.forEach(field => {
+                        if (field.obsolete) return; 
+                        const fieldDiv = document.createElement('div');
+                        fieldDiv.className = 'mb-3';
+                        let fieldHtml = `<label class="form-label form-label-sm" for="${field.id}">${field.label} ${field.required ? '<span class="text-red-500">*</span>': ''}</label>`;
+                        if (field.type === 'select') {
+                            fieldHtml += `<select id="${field.id}" name="${field.name}" class="form-select form-select-sm"${field.required ? ' required':''}>`;
+                            (field.options || []).forEach(opt => fieldHtml += `<option value="${opt.toLowerCase().replace(/\s+/g, '_')}">${opt}</option>`);
+                            fieldHtml += `</select>`;
+                        } else {
+                            fieldHtml += `<input type="${field.type}" id="${field.id}" name="${field.name}" class="form-input form-input-sm" placeholder="${field.placeholder || ''}"${field.required ? ' required':''}${field.defaultValue ? ` value="${field.defaultValue}"`:''}>`;
+                        }
+                        fieldDiv.innerHTML = fieldHtml;
+                        dynamicFieldsContainer.appendChild(fieldDiv);
+                    });
+                }
+            }
+            if(balanceAfterOpSpan) balanceAfterOpSpan.textContent = '--,--';
+        });
+
+        dynamicFieldsContainer.addEventListener('input', function(e) {
+            if (e.target.type === 'number' && balanceAfterOpSpan) {
+                const amountInput = Array.from(dynamicFieldsContainer.querySelectorAll('input[type="number"]')).find(input => input.name.includes('montant')); 
+                const amount = parseFloat(amountInput?.value) || 0;
+                const selectedOpType = mockOperationTypes.find(ot => ot.id === opTypeSelect.value);
+                const balanceAfter = selectedOpType && selectedOpType.impactsBalance ? user.solde - amount : user.solde;
+                balanceAfterOpSpan.textContent = amount > 0 && selectedOpType && selectedOpType.impactsBalance ? balanceAfter.toLocaleString() : user.solde.toLocaleString();
+            }
+        });
+    }
+
+
+    function getAgentTransactionHistoryContent() {
+        const user = users[currentUserId];
+        const agentTransactions = mockTransactions.filter(t => t.agentId === user.id).sort((a,b) => new Date(b.date) - new Date(a.date));
+        const headers = ['ID Op.', 'Date/Heure', 'Type', 'Montant Princ.', 'Frais', 'Total Débité', 'Bénéficiaire/Détails', 'Statut', 'Preuve', 'Commission Gén.', 'Validateur', 'Motif Rejet', 'Action'];
+        const rows = agentTransactions.map(t => {
+            const opType = mockOperationTypes.find(ot => ot.id === t.opTypeId);
+            const validator = t.validateurId ? users[t.validateurId]?.name : '-';
+            let benefDetails = '-';
+            if (opType && t.data) {
+                if (opType.id === 'op_transfert_nat') benefDetails = t.data.nom_beneficiaire || '-';
+                else if (opType.id === 'op_paiement_sde') benefDetails = t.data.ref_client_sde || '-';
+                else if (opType.id === 'op_reabo_canal') benefDetails = t.data.num_decodeur_canal || '-';
+                else if (opType.id === 'op_paiement_woyofal') benefDetails = t.data.num_compteur_woyofal || '-';
+            }
+
+            return [
+                t.id, formatDate(t.date), opType ? opType.name : 'N/A', formatAmount(t.montant_principal), formatAmount(t.frais), formatAmount(t.montant_total), benefDetails,
+                `<span class="badge ${t.statut === 'Validé' ? 'badge-success' : (t.statut.includes('En attente') ? 'badge-warning' : 'badge-danger')}">${t.statut}</span>`,
+                t.preuveUrl ? `<button class="text-blue-500 hover:underline" onclick="viewProof('${t.preuveUrl}')"><i class="fas fa-eye"></i></button>` : 'N/A',
+                formatAmount(t.commission_generee), validator, t.motif_rejet || '-',
+                '<button class="btn btn-xs btn-info text-white !py-1 !px-2" title="Voir Détails"><i class="fas fa-search-plus"></i></button>'
+            ];
+        });
+        return `
+            ${createCard('Historique des Opérations', `
+                <form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 border rounded-md bg-gray-50">
+                    <div><label class="form-label form-label-sm">Plage de Dates</label><input type="date" class="form-input form-input-sm"></div>
+                    <div><label class="form-label form-label-sm">Type d'Opération</label><select class="form-select form-select-sm"><option>Tous</option></select></div>
+                    <div><label class="form-label form-label-sm">Statut</label><select class="form-select form-select-sm"><option>Tous</option><option>Validé</option><option>En attente</option><option>Rejeté</option></select></div>
+                    <div><label class="form-label form-label-sm">Recherche (ID, Bénéf.)</label><input type="text" class="form-input form-input-sm"></div>
+                </form>
+                ${createTable(headers, rows, '', 'w-full table table-sm')}
+            `, 'fa-history')}
+        `;
+    }
+    
+    function viewProof(url) {
+        const proofImage = document.getElementById('proofImage');
+        if (proofImage) proofImage.src = url;
+        openModal('viewProofModal');
+    }
+
+    function getAgentCommissionsContent() {
+        const user = users[currentUserId];
+        const agentTransactions = mockTransactions.filter(t => t.agentId === user.id && t.statut === 'Validé' && t.commission_generee > 0);
+        const headers = ['Date Op.', 'ID Op.', 'Type Op.', 'Montant Op.', 'Commission Générée'];
+        const rows = agentTransactions.map(t => {
+             const opType = mockOperationTypes.find(ot => ot.id === t.opTypeId);
+             return [formatDate(t.date).split(' ')[0], t.id, opType ? opType.name : 'N/A', formatAmount(t.montant_principal), formatAmount(t.commission_generee)];
+        });
+        return `
+            ${createCard('Suivi des Commissions', `
+                <p class="text-lg mb-1">Commissions du Mois (Estimées) : <span class="font-bold text-blue-600">${formatAmount(user.commissions_mois_estimees)}</span></p>
+                <p class="text-lg mb-4">Commissions Totales Dues (Payables) : <span class="font-bold text-purple-600">${formatAmount(user.commissions_dues)}</span></p>
+                <form class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 p-4 border rounded-md bg-gray-50">
+                    <div><label class="form-label form-label-sm">Période (Mois)</label><input type="month" class="form-input form-input-sm"></div>
+                    <div class="self-end"><button class="btn btn-sm btn-primary">Filtrer</button></div>
+                </form>
+                ${createTable(headers, rows, 'Détail des commissions sur opérations validées', 'w-full table table-sm')}
+                <div class="mt-4 text-right"><button class="btn btn-sm btn-outline-secondary"><i class="fas fa-download mr-1"></i>Exporter Relevé</button></div>
+            `, 'fa-percent')}
+        `;
+    }
+    
+    function populateAgentRechargeHistory() {
+        const container = document.getElementById('agentRechargeHistoryTableContainer');
+        if (!container) return;
+        const user = users[currentUserId];
+        const history = mockAgentRechargeRequests.filter(r => r.agentId === user.id).sort((a,b) => new Date(b.date) - new Date(a.date));
+        const headers = ['Date Demande', 'Montant', 'Statut'];
+        const rows = history.map(r => [
+            formatDate(r.date).split(' ')[0], 
+            formatAmount(r.montant), 
+            `<span class="badge ${r.statut === 'Approuvée' ? 'badge-success' : (r.statut.includes('En attente') ? 'badge-warning' : 'badge-danger')}">${r.statut}</span>`
+        ]);
+        container.innerHTML = createTable(headers, rows, '', 'w-full table table-sm');
+    }
+    
+    function getReportProblemContent() { return createCard('Signaler un Problème / Suggestion', `
+        <form id="reportProblemForm">
+            <div class="mb-4">
+                <label class="form-label" for="requestTypeProblem">Type de Requête</label>
+                <select id="requestTypeProblem" class="form-select">
+                    <option value="probleme_technique">Problème Technique</option>
+                    <option value="erreur_transaction">Erreur sur Transaction</option>
+                    <option value="suggestion">Suggestion d'Amélioration</option>
+                    <option value="autre">Autre</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="form-label" for="requestSubjectProblem">Sujet</label>
+                <input type="text" id="requestSubjectProblem" class="form-input" placeholder="Sujet concis de votre requête">
+            </div>
+            <div class="mb-4">
+                <label class="form-label" for="requestDescriptionProblem">Description Détaillée</label>
+                <textarea id="requestDescriptionProblem" class="form-textarea" rows="4" placeholder="Décrivez clairement votre problème ou suggestion..."></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="form-label" for="requestAttachmentProblem">Pièce Jointe (Optionnel)</label>
+                <input type="file" id="requestAttachmentProblem" class="form-input">
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane mr-2"></i>Envoyer la Requête</button>
+            </div>
+        </form>
+    `, 'fa-bug');}
+
+
+    // --- CHEF AGENCE ---
+    function getChefAgenceDashboardContent() {
+        const user = users[currentUserId];
+        const agence = mockAgencies.find(ag => ag.id === user.agencyId);
+        const agentRechargePendingCount = mockAgentRechargeRequests.filter(r => r.chefAgenceId === user.id && r.statut === 'En attente Chef Agence').length;
+
+        return `
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                ${createCard('Mon Solde Actuel', `<p class="text-3xl font-bold text-green-600">${formatAmount(user.solde)}</p>`, 'fa-wallet', '')}
+                ${createCard('Mes Commissions Dues', `<p class="text-2xl font-semibold text-blue-600">${formatAmount(user.commissions_perso_dues)}</p>`, 'fa-coins', '')}
+                ${createCard('Agents Actifs', `<p class="text-2xl font-semibold">${user.agents_actifs}</p><p class="text-sm text-gray-500">Agence: ${agence ? agence.name : 'N/A'}</p>`, 'fa-users', '')}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                ${createCard('Volume Trans. Agence (Mois)', `<p class="text-2xl font-bold">${formatAmount(user.volume_agence_mois)}</p>`, 'fa-chart-bar', '')}
+                ${createCard('Commissions Agence (Mois)', `<p class="text-2xl font-bold">${formatAmount(user.commissions_agence_mois)}</p>`, 'fa-chart-pie', '')}
+            </div>
+            <div class="card mb-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-3">Alertes & Actions Rapides</h3>
+                <p class="text-orange-600 mb-3"><i class="fas fa-exclamation-triangle mr-2"></i>Demandes de Recharge Agents en Attente : <span class="font-bold">${agentRechargePendingCount}</span> ${agentRechargePendingCount > 0 ? `<a href="#" onclick="loadContent('Recharges Agents', getChefManageAgentRechargesContent)" class="text-blue-600 hover:underline ml-2">Gérer</a>` : ''}</p>
+                <div class="flex flex-wrap gap-3">
+                    <button class="btn btn-primary" onclick="openModal('agentNewOperationModal')"><i class="fas fa-plus-circle mr-2"></i>Nouvelle Opération (pour moi)</button>
+                    <button class="btn btn-secondary" onclick="loadContent('Gérer mes Agents', getChefManageAgentsContent)"><i class="fas fa-users-cog mr-2"></i>Gérer mes Agents</button>
+                    <button class="btn btn-success" onclick="openModal('requestChefRechargeModal')"><i class="fas fa-university mr-2"></i>Demander Recharge (Admin)</button>
+                    <button class="btn btn-info text-white" onclick="loadContent('Virer Commissions', getChefTransferCommissionsContent)"><i class="fas fa-random mr-2"></i>Virer Mes Commissions</button>
+                </div>
+            </div>
+            ${createCard('Performances Récentes Agence', '<div class="h-40 bg-gray-200 rounded flex items-center justify-center text-gray-400">Graphique simple ici</div>', 'fa-chart-line', '')}
+        `;
+    }
+    function getChefManageAgentsContent() {
+        const chef = users[currentUserId];
+        const myAgents = Object.values(users).filter(u => u.role === 'agent' && u.agencyId === chef.agencyId);
+        const headers = ['Nom Agent', 'Identifiant (Email)', 'Solde Actuel', 'Statut', 'Date Création', 'Actions'];
+        const rows = myAgents.map(agent => [
+            agent.name, agent.email, formatAmount(agent.solde), 
+            '<span class="badge badge-success">Actif</span>', 
+            '2025-01-15', 
+            `<button class="btn btn-xs btn-info text-white !py-1 !px-2 mr-1" title="Modifier"><i class="fas fa-edit"></i></button><button class="btn btn-xs btn-warning text-white !py-1 !px-2 mr-1" title="Suspendre"><i class="fas fa-ban"></i></button><button class="btn btn-xs btn-secondary !py-1 !px-2" title="Voir Historique"><i class="fas fa-history"></i></button>`
+        ]);
+        return `
+             <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-700">Gestion de Mes Agents</h2>
+                <button class="btn btn-success"><i class="fas fa-user-plus mr-2"></i>Créer un Compte Agent</button>
+            </div>
+            ${createCard('Liste des Agents de mon Agence', createTable(headers, rows), 'fa-users-cog')}
+        `;
+    }
+    function getChefManageAgentRechargesContent() {
+        const chef = users[currentUserId];
+        const pendingRecharges = mockAgentRechargeRequests.filter(r => r.chefAgenceId === chef.id && r.statut === 'En attente Chef Agence');
+        const headers = ['Date Demande', 'Nom Agent', 'Montant Demandé', 'Solde Agent Actuel', 'Motif', 'Actions'];
+        const rows = pendingRecharges.map(req => {
+            const agent = users[req.agentId];
+            return [
+                formatDate(req.date).split(' ')[0],
+                agent ? agent.name : 'N/A',
+                formatAmount(req.montant),
+                agent ? formatAmount(agent.solde) : '-',
+                req.motif || '-',
+                `<button class="btn btn-xs btn-success !py-1 !px-2 mr-1" title="Approuver"><i class="fas fa-check"></i> Approuver</button><button class="btn btn-xs btn-danger !py-1 !px-2" title="Rejeter"><i class="fas fa-times"></i> Rejeter</button>`
+            ];
+        });
+         return `
+            ${createCard('Demandes de Recharge des Agents en Attente', createTable(headers, rows), 'fa-wallet')}
+            `;
+    }
+    function getChefCommissionsContent() {
+        const user = users[currentUserId];
+        const headers = ['Date Op.', 'ID Op.', 'Type Op.', 'Montant Op.', 'Commission Générée (Perso)'];
+        const rows = [ 
+            ['2025-05-02', 'TRNCHF01', 'Transfert National', '250,000 XOF', '2,500 XOF'],
+        ];
+        return `
+            ${createCard('Mes Commissions Personnelles', `
+                <p class="text-lg mb-4">Commissions Personnelles Dues : <span class="font-bold text-purple-600">${formatAmount(user.commissions_perso_dues)}</span></p>
+                ${createTable(headers, rows, 'Détail de vos commissions personnelles', 'w-full table table-sm')}
+                <div class="mt-4">
+                    <button class="btn btn-primary" onclick="loadContent('Virer Commissions', getChefTransferCommissionsContent)"><i class="fas fa-random mr-2"></i>Virer sur mon Solde Opérationnel</button>
+                </div>
+            `, 'fa-coins')}
+            ${createCard('Commissions Agence (Vue Agrégée)', `
+                <p class="text-lg mb-4">Total Commissions Générées par l'Agence ce mois : <span class="font-bold text-blue-600">${formatAmount(user.commissions_agence_mois)}</span></p>
+            `, 'fa-chart-pie')}
+        `;
+    }
+    function getChefTransferCommissionsContent() {
+        const user = users[currentUserId];
+        return createCard('Transférer Mes Commissions Personnelles', `
+            <p class="text-lg mb-2">Commissions personnelles dues et disponibles: <span class="font-bold text-green-500">${formatAmount(user.commissions_perso_dues)}</span></p>
+            <p class="text-lg mb-4">Solde opérationnel actuel: <span class="font-bold text-blue-500">${formatAmount(user.solde)}</span></p>
+            <div class="mb-4">
+                <label class="form-label" for="chefCommissionTransferAmount">Montant à transférer</label>
+                <input type="number" id="chefCommissionTransferAmount" class="form-input" placeholder="Max ${user.commissions_perso_dues.toLocaleString()}" max="${user.commissions_perso_dues}">
+            </div>
+            <button class="btn btn-primary"><i class="fas fa-exchange-alt mr-2"></i>Transférer vers mon solde</button>
+            <p class="text-xs text-gray-500 mt-2">Cette action est automatique, enregistrée et impacte immédiatement les montants.</p>
+        `, 'fa-random');
+    }
+
+
+    // --- ADMIN GENERAL ---
+    function getAdminGeneralDashboardContent() {
+        const pendingValidations = mockTransactions.filter(t => t.statut.includes('En attente')).length;
+        const unassignedRequests = mockRequests.filter(r => r.statut === 'Non assignée').length;
+        const chefRechargeRequests = mockRequests.filter(r => r.type.includes('Demande de Recharge (Chef Agence)') && r.statut !== 'Traité' && r.statut !== 'Rejeté').length;
+
+        return `
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                ${createCard('Volume Total Trans. (Mois)', '<p class="text-3xl font-bold text-green-600">50,2M XOF</p>', 'fa-chart-line', '')}
+                ${createCard('Nombre Total Opérations (Mois)', '<p class="text-3xl font-bold">7,850</p>', 'fa-exchange-alt', '')}
+                ${createCard('Agences Actives', `<p class="text-3xl font-bold">${mockAgencies.length}</p>`, 'fa-building', '')}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                ${createCard('Validations en Attente', `<p class="text-2xl font-bold text-orange-500">${pendingValidations}</p><a href="#" onclick="loadContent('Validation Transactions', () => getAdminValidationTransactionsContent('unassigned'))" class="text-blue-600 hover:underline text-sm">Gérer</a>`, 'fa-tasks', '')}
+                ${createCard('Requêtes Non Assignées', `<p class="text-2xl font-bold text-red-500">${unassignedRequests}</p><a href="#" onclick="loadContent('Gestion des Requêtes', () => getAdminManageRequestsContent('unassigned'))" class="text-blue-600 hover:underline text-sm">Gérer</a>`, 'fa-inbox', '')}
+                ${createCard('Recharges Chefs Agence', `<p class="text-2xl font-bold text-purple-500">${chefRechargeRequests}</p><a href="#" onclick="loadContent('Gestion des Requêtes', () => getAdminManageRequestsContent('chef_recharge'))" class="text-blue-600 hover:underline text-sm">Gérer</a>`, 'fa-university', '')}
+            </div>
+            ${createCard('Actions Rapides Administrateur', `
+                <div class="flex flex-wrap gap-3">
+                    <button class="btn btn-primary" onclick="loadContent('Gestion des Agences', getAdminManageAgenciesContent)"><i class="fas fa-building mr-2"></i>Gérer Agences</button>
+                    <button class="btn btn-secondary" onclick="loadContent('Attribution Services Agences', getAdminAssignOpsToAgencyContent)"><i class="fas fa-store-alt-slash mr-2"></i>Attribuer Services</button>
+                    <button class="btn btn-info text-white" onclick="loadContent('Journal d\\\'Audit', getAuditLogContent)"><i class="fas fa-clipboard-list mr-2"></i>Voir Journal d'Audit</button>
+                </div>
+            `, 'fa-cogs', '')}
+        `;
+    }
+    function getAdminValidationTransactionsContent(defaultFilter = 'unassigned') {
+        const title = 'Validation des Transactions Agents';
+        const icon = 'fa-check-double';
+        const items = mockTransactions.filter(t => t.statut.includes('En attente'));
+        const currentUser = users[currentUserId];
+
+        const unassignedItems = items.filter(item => !item.assignedTo);
+        const myItems = items.filter(item => item.assignedTo === currentUser.id);
+        const allPendingItems = items; 
+
+        let tabsHtml = `
+            <div class="tabs">
+                <button data-target="admin-tx-unassigned" class="${defaultFilter === 'unassigned' ? 'active' : ''}">Non Assignées (${unassignedItems.length})</button>
+                <button data-target="admin-tx-my-assigned" class="${defaultFilter === 'assigned_to_me' ? 'active' : ''}">Mes Transactions (${myItems.length})</button>
+                <button data-target="admin-tx-all" class="${defaultFilter === 'all' ? 'active' : ''}">Toutes en Attente (${allPendingItems.length})</button>
+            </div>
+            <div class="tab-content">
+        `;
+        
+        tabsHtml += `<div id="admin-tx-unassigned" class="${defaultFilter === 'unassigned' ? '' : 'hidden'}">${renderAdminQueueTable(unassignedItems, 'transactions', 'admin_general', 'unassigned')}</div>`;
+        tabsHtml += `<div id="admin-tx-my-assigned" class="${defaultFilter === 'assigned_to_me' ? '' : 'hidden'}">${renderAdminQueueTable(myItems, 'transactions', 'admin_general', 'assigned_to_me')}</div>`;
+        tabsHtml += `<div id="admin-tx-all" class="${defaultFilter === 'all' ? '' : 'hidden'}">${renderAdminQueueTable(allPendingItems, 'transactions', 'admin_general', 'all')}</div>`;
+        tabsHtml += `</div>`;
+
+        return createCard(title, tabsHtml, icon);
+    }
+
+    function renderAdminQueueTable(items, queueType, role, viewType) {
+        if (!items || items.length === 0) {
+            return '<p class="text-gray-500 p-4 text-center">Aucun élément à afficher dans cette vue.</p>';
+        }
+        const currentUser = users[currentUserId];
+
+        const headers = queueType === 'transactions' ? 
+            ['ID Op.', 'Date Soum.', 'Agent', 'Agence', 'Type Op.', 'Montant', 'Preuve', 'Assigné à', 'Actions'] :
+            ['ID Req.', 'Date Soum.', 'Demandeur', 'Type Req.', 'Sujet', 'Assigné à', 'Actions'];
+
+        const rows = items.map(item => {
+            let actions = '';
+            const itemId = item.id;
+            const agent = queueType === 'transactions' ? users[item.agentId] : null;
+            const agence = agent ? mockAgencies.find(ag => ag.id === agent.agencyId) : null;
+            const opType = queueType === 'transactions' ? mockOperationTypes.find(ot => ot.id === item.opTypeId) : null;
+            const demandeur = queueType === 'requests' ? users[item.demandeurId] : null;
+            const assignedUser = item.assignedTo ? users[item.assignedTo] : null;
+
+
+            if (viewType === 'unassigned') {
+                actions += `<button class="btn btn-xs btn-success !py-1 !px-2 mr-1" onclick="assignToSelf('${itemId}', '${queueType}')" title="S'assigner"><i class="fas fa-user-plus"></i></button>`;
+                if (role === 'admin_general') { // Only admin general can assign to sub-admin
+                    actions += `<button class="btn btn-xs btn-info text-white !py-1 !px-2" onclick="openAssignModal('${itemId}', '${queueType}')" title="Assigner à Sous-Admin"><i class="fas fa-user-tag"></i></button>`;
+                }
+            } else if (viewType === 'assigned_to_me' || (viewType === 'all' && item.assignedTo === currentUser.id)) {
+                 actions += queueType === 'transactions' ?
+                    `<button class="btn btn-xs btn-success !py-1 !px-2 mr-1" title="Valider"><i class="fas fa-check"></i></button><button class="btn btn-xs btn-danger !py-1 !px-2 mr-1" title="Rejeter"><i class="fas fa-times"></i></button>`:
+                    `<button class="btn btn-xs btn-primary !py-1 !px-2 mr-1" title="Traiter"><i class="fas fa-cogs"></i></button>`;
+                actions += `<button class="btn btn-xs btn-outline-secondary !py-1 !px-2" title="Libérer l'assignation"><i class="fas fa-undo"></i></button>`;
+            } else if (viewType === 'all' && item.assignedTo && item.assignedTo !== currentUser.id && role === 'admin_general') {
+                 actions += `<button class="btn btn-xs btn-info text-white !py-1 !px-2" onclick="openAssignModal('${itemId}', '${queueType}')" title="Réassigner"><i class="fas fa-user-edit"></i></button>`;
+            }
+
+
+            if (queueType === 'transactions') {
+                return [
+                    item.id, formatDate(item.date), agent ? agent.name : 'N/A', agence ? agence.name : 'N/A', opType ? opType.name : 'N/A', formatAmount(item.montant_principal),
+                    item.preuveUrl ? `<button class="text-blue-500 hover:underline" onclick="viewProof('${item.preuveUrl}')"><i class="fas fa-file-image"></i></button>` : 'N/A',
+                    assignedUser ? assignedUser.name : '<span class="badge badge-gray">Non assignée</span>',
+                    actions
+                ];
+            } else { // requests
+                return [
+                    item.id, formatDate(item.date), demandeur ? demandeur.name : 'N/A', item.type, item.sujet,
+                    assignedUser ? assignedUser.name : '<span class="badge badge-gray">Non assignée</span>',
+                    actions
+                ];
+            }
+        });
+        return createTable(headers, rows, '', 'w-full table table-sm');
+    }
+    
+    function getAdminManageRequestsContent(defaultFilter = 'unassigned') {
+        const title = 'Gestion des Requêtes Utilisateurs';
+        const icon = 'fa-envelope-open-text';
+        let itemsToFilter = mockRequests;
+        let activeTab = defaultFilter;
+
+        if (defaultFilter === 'chef_recharge') { 
+            itemsToFilter = mockRequests.filter(r => r.type.includes('Demande de Recharge (Chef Agence)') && r.statut !== 'Traité' && r.statut !== 'Rejeté');
+            activeTab = 'unassigned'; // Default to unassigned for this specific filter view
+        }
+        const currentUser = users[currentUserId];
+
+        const unassignedItems = itemsToFilter.filter(item => item.statut === 'Non assignée' && !item.assignedTo);
+        const myItems = itemsToFilter.filter(item => item.assignedTo === currentUser.id && item.statut !== 'Traité' && item.statut !== 'Rejeté');
+        const allPendingItems = itemsToFilter.filter(item => item.statut !== 'Traité' && item.statut !== 'Rejeté');
+
+
+        let tabsHtml = `
+            <div class="tabs">
+                <button data-target="admin-req-unassigned" class="${activeTab === 'unassigned' ? 'active' : ''}">Non Assignées (${unassignedItems.length})</button>
+                <button data-target="admin-req-my-assigned" class="${activeTab === 'assigned_to_me' ? 'active' : ''}">Mes Requêtes (${myItems.length})</button>
+                <button data-target="admin-req-all" class="${activeTab === 'all' ? 'active' : ''}">Toutes en Attente (${allPendingItems.length})</button>
+            </div>
+            <div class="tab-content">
+        `;
+        
+        tabsHtml += `<div id="admin-req-unassigned" class="${activeTab === 'unassigned' ? '' : 'hidden'}">${renderAdminQueueTable(unassignedItems, 'requests', 'admin_general', 'unassigned')}</div>`;
+        tabsHtml += `<div id="admin-req-my-assigned" class="${activeTab === 'assigned_to_me' ? '' : 'hidden'}">${renderAdminQueueTable(myItems, 'requests', 'admin_general', 'assigned_to_me')}</div>`;
+        tabsHtml += `<div id="admin-req-all" class="${activeTab === 'all' ? '' : 'hidden'}">${renderAdminQueueTable(allPendingItems, 'requests', 'admin_general', 'all')}</div>`;
+        tabsHtml += `</div>`;
+
+        return createCard(title, tabsHtml, icon);
+    }
+
+    function getAdminManageAgenciesContent() {
+        const headers = ['ID Agence', 'Nom Agence', 'Chef d\'Agence', 'Nb. Agents', 'Volume (Mois)', 'Actions'];
+        const rows = mockAgencies.map(ag => {
+            const chef = Object.values(users).find(u => u.role === 'chef_agence' && u.agencyId === ag.id);
+            const agentsCount = Object.values(users).filter(u => u.role === 'agent' && u.agencyId === ag.id).length;
+            return [
+                ag.id, ag.name, chef ? chef.name : 'N/A', agentsCount, chef ? formatAmount(chef.volume_agence_mois) : '-',
+                `<button class="btn btn-xs btn-info text-white !py-1 !px-2 mr-1" title="Modifier"><i class="fas fa-edit"></i></button><button class="btn btn-xs btn-secondary !py-1 !px-2" onclick="loadContent('Attribution Services Agences', () => getAdminAssignOpsToAgencyContent('${ag.id}'))" title="Attribuer Services"><i class="fas fa-store-alt-slash"></i></button>`
+            ];
+        });
+         return `
+             <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-700">Gestion des Agences et Chefs d'Agence</h2>
+                <button class="btn btn-success"><i class="fas fa-user-plus mr-2"></i>Créer Chef d'Agence</button>
+            </div>
+            ${createCard('Liste des Agences', createTable(headers, rows), 'fa-building')}
+        `;
+    }
+    function getAdminAssignOpsToAgencyContent(agencyIdToSelect = null) {
+        let optionsHtml = mockAgencies.map(ag => `<option value="${ag.id}" ${agencyIdToSelect === ag.id ? 'selected': ''}>${ag.name}</option>`).join('');
+        
+        const selectedAgencyId = agencyIdToSelect || (mockAgencies.length > 0 ? mockAgencies[0].id : null);
+        const currentAgencyName = selectedAgencyId ? mockAgencies.find(a=>a.id === selectedAgencyId).name : '';
+        
+        function generateChecklistHtml(selAgencyId) {
+            let servicesHtml = '';
+            const allowedOpsForSelected = selAgencyId ? (agencyOperationAccess[selAgencyId] || []) : [];
+            mockOperationTypes.forEach(opType => {
+                const isChecked = allowedOpsForSelected.includes(opType.id);
+                servicesHtml += `<div><input type="checkbox" id="op_access_${opType.id}_${selAgencyId}" data-opid="${opType.id}" class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded" ${isChecked ? 'checked' : ''}><label for="op_access_${opType.id}_${selAgencyId}">${opType.name} <span class="text-xs text-gray-500">(${opType.status})</span></label></div>`;
+            });
+            return servicesHtml;
+        }
+
+        const initialChecklistHtml = generateChecklistHtml(selectedAgencyId);
+
+        const cardContent = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="form-label" for="selectAgencyForOps">Choisir une Agence</label>
+                    <select id="selectAgencyForOps" class="form-select mb-4">
+                        ${optionsHtml}
+                    </select>
+                    <button class="btn btn-primary mt-6"><i class="fas fa-save mr-2"></i>Enregistrer Attributions</button>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-700 mb-2">Types d'opérations pour l'agence <span id="selectedAgencyNameOps" class="font-bold">${currentAgencyName}</span>:</h4>
+                    <div id="agencyServicesChecklist" class="space-y-2 max-h-96 overflow-y-auto p-3 border rounded-md bg-gray-50">
+                        ${initialChecklistHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Attach event listener after content is loaded
+        setTimeout(() => {
+            const selectElement = document.getElementById('selectAgencyForOps');
+            const checklistContainer = document.getElementById('agencyServicesChecklist');
+            const agencyNameSpan = document.getElementById('selectedAgencyNameOps');
+            selectElement?.addEventListener('change', function() {
+                const newSelectedAgencyId = this.value;
+                const newAgencyName = this.options[this.selectedIndex].text;
+                if (agencyNameSpan) agencyNameSpan.textContent = newAgencyName;
+                if (checklistContainer) checklistContainer.innerHTML = generateChecklistHtml(newSelectedAgencyId);
+            });
+        },0);
+
+        return createCard('Attribuer Types d\'Opérations aux Agences', cardContent, 'fa-store-alt-slash');
+    }
+
+
+    function getAdminManageSubAdminsContent() { 
+        const headers = ['ID', 'Nom', 'Email', 'Statut', 'Permissions Spécifiques', 'Actions'];
+        const sousAdmins = Object.values(users).filter(u => u.role === 'sous_admin');
+        const rows = sousAdmins.map(sa => [
+            sa.id, sa.name, sa.email, '<span class="badge badge-success">Actif</span>', 'Validation Transferts, Gestion Requêtes Agents',
+            `<button class="btn btn-xs btn-info text-white !py-1 !px-2 mr-1" title="Modifier Permissions"><i class="fas fa-user-shield"></i></button><button class="btn btn-xs btn-warning text-white !py-1 !px-2" title="Suspendre"><i class="fas fa-ban"></i></button>`
+        ]);
+         return `
+             <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-700">Gestion des Sous-Administrateurs</h2>
+                <button class="btn btn-success"><i class="fas fa-user-plus mr-2"></i>Créer Sous-Administrateur</button>
+            </div>
+            ${createCard('Liste des Sous-Administrateurs', createTable(headers, rows), 'fa-user-shield')}
+        `;
+    }
+    function getConfigCommissionsContent() { return createCard('Configuration des Commissions Globales', 'Formulaire de configuration...', 'fa-sliders-h');}
+    function getAuditLogContent() { 
+        const headers = ['Timestamp', 'Utilisateur', 'Rôle', 'Action Effectuée', 'Entité Affectée', 'Détails', 'Adresse IP'];
+        const rows = [
+            [formatDate('2025-05-09 10:30:15'), 'Adam Ba', 'Admin Général', 'Validation Transaction', 'TRN001', 'Montant: 25,000 XOF', '192.168.1.10'],
+            [formatDate('2025-05-09 09:15:00'), 'Charles Mendy', 'Chef Agence', 'Approbation Recharge Agent', 'ARR002 (Agent Bob)', 'Montant: 30,000 XOF', '10.0.5.23'],
+            [formatDate('2025-05-08 16:00:00'), 'David Moreau', 'Développeur', 'Modification Type Opération', 'op_paiement_sde', 'Changement commission: 100 XOF', '127.0.0.1'],
+        ];
+        return createCard('Journal d\'Audit des Actions Système', createTable(headers, rows), 'fa-clipboard-list');
+    }
+
+    // --- SOUS-ADMIN ---
+    function getSousAdminDashboardContent() {
+        const currentUser = users[currentUserId];
+        const myAssignedTransactions = mockTransactions.filter(t => t.assignedTo === currentUser.id && t.statut.includes('En attente')).length;
+        const myAssignedRequests = mockRequests.filter(r => r.assignedTo === currentUser.id && r.statut !== 'Traité' && r.statut !== 'Rejeté').length;
+        const unassignedTransactions = mockTransactions.filter(t => t.statut.includes('En attente') && !t.assignedTo).length;
+        const unassignedRequests = mockRequests.filter(r => r.statut === 'Non assignée' && !r.assignedTo).length;
+
+        return `
+            ${createCard('Bienvenue ' + currentUser.name, '<p>Vos tâches principales : validation des transactions et traitement des requêtes qui vous sont assignées, ou que vous vous assignez depuis les files d\'attente.</p>', 'fa-user-check')}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 ${createCard('Mes Validations Assignées', `<p class="text-2xl font-bold text-orange-500 mb-2">${myAssignedTransactions} <span class="text-sm font-normal">opérations</span></p><button class="btn btn-warning w-full" onclick="loadContent('Validation Transactions', () => getSousAdminValidationTransactionsContent('assigned_to_me'))"><i class="fas fa-user-check mr-2"></i>Voir mes validations</button>`, 'fa-tasks')}
+                ${createCard('Mes Requêtes Assignées', `<p class="text-2xl font-bold text-red-500 mb-2">${myAssignedRequests} <span class="text-sm font-normal">requêtes</span></p><button class="btn btn-danger w-full" onclick="loadContent('Gestion des Requêtes', () => getSousAdminManageRequestsContent('assigned_to_me'))"><i class="fas fa-user-tag mr-2"></i>Voir mes requêtes</button>`, 'fa-headset')}
+            </div>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                ${createCard('Validations Non Assignées', `<p class="text-2xl font-bold text-blue-500 mb-2">${unassignedTransactions} <span class="text-sm font-normal">disponibles</span></p><button class="btn btn-info text-white w-full" onclick="loadContent('Validation Transactions', () => getSousAdminValidationTransactionsContent('unassigned'))"><i class="fas fa-ballot-check mr-2"></i>Voir et s'assigner</button>`, 'fa-ballot-check')}
+                 ${createCard('Requêtes Non Assignées', `<p class="text-2xl font-bold text-cyan-500 mb-2">${unassignedRequests} <span class="text-sm font-normal">disponibles</span></p><button class="btn btn-info text-white bg-cyan-600 hover:bg-cyan-700 w-full" onclick="loadContent('Gestion des Requêtes', () => getSousAdminManageRequestsContent('unassigned'))"><i class="fas fa-inbox-in mr-2"></i>Voir et s'assigner</button>`, 'fa-inbox-in')}
+            </div>
+        `;
+    }
+    function getSousAdminValidationTransactionsContent(defaultFilter = 'unassigned') {
+        const title = 'Validation des Transactions (Sous-Admin)';
+        const icon = 'fa-check-square';
+        const items = mockTransactions.filter(t => t.statut.includes('En attente')); 
+        const currentUser = users[currentUserId];
+
+        const unassignedItems = items.filter(item => !item.assignedTo); 
+        const myItems = items.filter(item => item.assignedTo === currentUser.id);
+
+        let tabsHtml = `
+            <div class="tabs">
+                <button data-target="sa-tx-unassigned" class="${defaultFilter === 'unassigned' ? 'active' : ''}">Non Assignées (${unassignedItems.length})</button>
+                <button data-target="sa-tx-my-assigned" class="${defaultFilter === 'assigned_to_me' ? 'active' : ''}">Mes Transactions (${myItems.length})</button>
+            </div>
+            <div class="tab-content">
+        `;
+        
+        tabsHtml += `<div id="sa-tx-unassigned" class="${defaultFilter === 'unassigned' ? '' : 'hidden'}">${renderAdminQueueTable(unassignedItems, 'transactions', 'sous_admin', 'unassigned')}</div>`;
+        tabsHtml += `<div id="sa-tx-my-assigned" class="${defaultFilter === 'assigned_to_me' ? '' : 'hidden'}">${renderAdminQueueTable(myItems, 'transactions', 'sous_admin', 'assigned_to_me')}</div>`;
+        tabsHtml += `</div>`;
+
+        return createCard(title, tabsHtml, icon);
+    }
+    function getSousAdminManageRequestsContent(defaultFilter = 'unassigned') {
+        const title = 'Gestion des Requêtes (Sous-Admin)';
+        const icon = 'fa-headset';
+        const items = mockRequests.filter(r => r.statut !== 'Traité' && r.statut !== 'Rejeté'); 
+        const currentUser = users[currentUserId];
+
+        const unassignedItems = items.filter(item => item.statut === 'Non assignée' && !item.assignedTo);
+        const myItems = items.filter(item => item.assignedTo === currentUser.id);
+
+        let tabsHtml = `
+            <div class="tabs">
+                <button data-target="sa-req-unassigned" class="${defaultFilter === 'unassigned' ? 'active' : ''}">Non Assignées (${unassignedItems.length})</button>
+                <button data-target="sa-req-my-assigned" class="${defaultFilter === 'assigned_to_me' ? 'active' : ''}">Mes Requêtes (${myItems.length})</button>
+            </div>
+            <div class="tab-content">
+        `;
+        
+        tabsHtml += `<div id="sa-req-unassigned" class="${defaultFilter === 'unassigned' ? '' : 'hidden'}">${renderAdminQueueTable(unassignedItems, 'requests', 'sous_admin', 'unassigned')}</div>`;
+        tabsHtml += `<div id="sa-req-my-assigned" class="${defaultFilter === 'assigned_to_me' ? '' : 'hidden'}">${renderAdminQueueTable(myItems, 'requests', 'sous_admin', 'assigned_to_me')}</div>`;
+        tabsHtml += `</div>`;
+        return createCard(title, tabsHtml, icon);
+    }
+
+    // --- DEVELOPPEUR ---
+    function getDevDashboardContent() { 
+        return `
+            ${createCard('Tableau de Bord Technique', `
+                <p class="mb-4">Accès rapide aux configurations et à la surveillance du système.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button class="btn btn-lg btn-block btn-primary text-left p-4" onclick="loadContent('Types d\'Opérations', getDevManageOperationTypesContent)">
+                        <i class="fas fa-cogs fa-2x mr-3"></i>
+                        <div><span class="font-semibold">Gestion des Types d'Opérations</span><br><span class="text-sm opacity-80">Définir et configurer les services</span></div>
+                    </button>
+                     <button class="btn btn-lg btn-block btn-secondary text-left p-4" onclick="loadContent('Configuration Globale', getDevSystemConfigContent)">
+                        <i class="fas fa-tools fa-2x mr-3"></i>
+                        <div><span class="font-semibold">Configuration Globale</span><br><span class="text-sm opacity-80">Paramètres système et sécurité</span></div>
+                    </button>
+                     <button class="btn btn-lg btn-block btn-warning text-left p-4" onclick="loadContent('Journaux d\'Erreurs', getDevErrorLogsContent)">
+                        <i class="fas fa-bug fa-2x mr-3"></i>
+                        <div><span class="font-semibold">Journaux d'Erreurs</span><br><span class="text-sm opacity-80">Surveiller les problèmes</span></div>
+                    </button>
+                </div>
+            `, 'fa-server')}
+            ${createCard('Indicateurs de Santé Système (Exemple)', `
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div><p class="text-3xl font-bold text-green-500">OK</p><p class="text-sm text-gray-600">Statut API</p></div>
+                    <div><p class="text-3xl font-bold text-green-500">99.9%</p><p class="text-sm text-gray-600">Uptime (30j)</p></div>
+                </div>
+            `, 'fa-heartbeat')}
+        `;
+    }
+    function getDevManageOperationTypesContent() {
+        const headers = ['Nom', 'Description', 'Impacte Solde?', 'Statut', 'Champs Définis', 'Actions'];
+        const rows = mockOperationTypes.map(opType => [
+            opType.name, opType.description, opType.impactsBalance ? 'Oui' : 'Non', 
+            `<span class="badge ${opType.status === 'active' ? 'badge-success' : (opType.status === 'inactive' ? 'badge-warning' : 'badge-gray')}">${opType.status}</span>`, 
+            opType.fields.length, 
+            `<button class="btn btn-xs btn-info text-white !py-1 !px-2" onclick="editOperationType('${opType.id}')"><i class="fas fa-edit"></i> Éditer</button>`
+        ]);
+        return `
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-700">Gestion des Types d'Opérations</h2>
+                <button class="btn btn-success" onclick="createNewOperationType()"><i class="fas fa-plus-circle mr-2"></i>Créer Nouveau Type</button>
+            </div>
+            ${createTable(headers, rows, 'Liste des types d\'opérations configurés dans le système.')}
+        `;
+    }
+    
+    function createNewOperationType() {
+        document.getElementById('editingOpTypeId').value = ''; 
+        document.getElementById('devOpTypeModalTitle').textContent = "Créer un Nouveau Type d'Opération";
+        document.getElementById('devOperationTypeForm').reset(); 
+        document.getElementById('devOpTypeFieldsContainer').innerHTML = ''; 
+        document.getElementById('devOpCommissionTiersList').innerHTML = ''; 
+        document.getElementById('devOpCommissionFixedContainer').classList.add('hidden');
+        document.getElementById('devOpCommissionPercentageContainer').classList.add('hidden');
+        document.getElementById('devOpCommissionTiersContainer').classList.add('hidden');
+        document.getElementById('devOpCommissionType').value = 'none';
+
+        const modal = document.getElementById('devEditOperationTypeModal');
+        modal.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+        modal.querySelector('.tabs button[data-target="devOpTypeTabInfo"]').classList.add('active');
+        modal.querySelectorAll('.tab-content > div').forEach(pane => pane.classList.add('hidden'));
+        modal.querySelector('#devOpTypeTabInfo').classList.remove('hidden');
+        
+        openModal('devEditOperationTypeModal');
+    }
+
+    function editOperationType(opTypeId) {
+        const opType = mockOperationTypes.find(ot => ot.id === opTypeId);
+        if (!opType) return;
+
+        document.getElementById('editingOpTypeId').value = opType.id;
+        document.getElementById('devOpTypeModalTitle').textContent = `Éditer: ${opType.name}`;
+        
+        document.getElementById('devOpTypeName').value = opType.name;
+        document.getElementById('devOpTypeDescription').value = opType.description;
+        document.getElementById('devOpTypeImpactsBalance').checked = opType.impactsBalance;
+        document.getElementById('devOpTypeStatus').value = opType.status;
+
+        const fieldsContainer = document.getElementById('devOpTypeFieldsContainer');
+        fieldsContainer.innerHTML = ''; 
+        opType.fields.forEach(field => addDevOpTypeFieldRow(field, fieldsContainer));
+        
+        const commTypeSelect = document.getElementById('devOpCommissionType');
+        commTypeSelect.value = opType.commissionConfig.type;
+        commTypeSelect.dispatchEvent(new Event('change')); 
+
+        if (opType.commissionConfig.type === 'fixed') {
+            document.getElementById('devOpCommissionFixedAmount').value = opType.commissionConfig.amount;
+        } else if (opType.commissionConfig.type === 'percentage') {
+            document.getElementById('devOpCommissionPercentageRate').value = opType.commissionConfig.rate;
+        } else if (opType.commissionConfig.type === 'tiers') {
+            const tiersList = document.getElementById('devOpCommissionTiersList');
+            tiersList.innerHTML = '';
+            opType.commissionConfig.tiers.forEach(tier => addDevOpCommissionTierRow(tier, tiersList));
+        }
+        
+        const modal = document.getElementById('devEditOperationTypeModal');
+        modal.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+        modal.querySelector('.tabs button[data-target="devOpTypeTabInfo"]').classList.add('active');
+        modal.querySelectorAll('.tab-content > div').forEach(pane => pane.classList.add('hidden'));
+        modal.querySelector('#devOpTypeTabInfo').classList.remove('hidden');
+
+        openModal('devEditOperationTypeModal');
+    }
+
+
+    function setupDevOperationTypeModalTabsAndForm() {
+        const modal = document.getElementById('devEditOperationTypeModal');
+        if (!modal) return;
+
+        const tabButtons = modal.querySelectorAll('.tabs button[data-target]');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabContainer = modal.querySelector('.tab-content');
+                const targetTabId = button.dataset.target;
+
+                modal.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                Array.from(tabContainer.children).forEach(contentPane => {
+                    contentPane.classList.toggle('hidden', contentPane.id !== targetTabId);
+                });
+            });
+        });
+        
+        const addFieldBtn = modal.querySelector('#devOpTypeAddFieldBtn');
+        const fieldsContainer = modal.querySelector('#devOpTypeFieldsContainer');
+        addFieldBtn?.addEventListener('click', () => addDevOpTypeFieldRow(null, fieldsContainer));
+
+        const commissionTypeSelect = modal.querySelector('#devOpCommissionType');
+        commissionTypeSelect?.addEventListener('change', function() {
+            modal.querySelector('#devOpCommissionFixedContainer').classList.toggle('hidden', this.value !== 'fixed');
+            modal.querySelector('#devOpCommissionPercentageContainer').classList.toggle('hidden', this.value !== 'percentage');
+            modal.querySelector('#devOpCommissionTiersContainer').classList.toggle('hidden', this.value !== 'tiers');
+        });
+        
+        const addTierBtn = modal.querySelector('#devOpTypeAddTierBtn');
+        const tiersList = modal.querySelector('#devOpCommissionTiersList');
+        addTierBtn?.addEventListener('click', () => addDevOpCommissionTierRow(null, tiersList));
+
+        document.getElementById('devOperationTypeForm').onsubmit = function(e) {
+            e.preventDefault();
+            const editingId = document.getElementById('editingOpTypeId').value;
+            console.log(editingId ? `Updating OpType ${editingId}` : "Creating new OpType", new FormData(this));
+            closeModal('devEditOperationTypeModal');
+            loadContent('Types d\'Opérations', getDevManageOperationTypesContent); 
+        };
+    }
+
+    function addDevOpTypeFieldRow(fieldData = {}, container) {
+        const fieldId = fieldData.id || `new_${Date.now()}`;
+        const newFieldHtml = `
+            <div class="p-3 border rounded-md bg-gray-50 grid grid-cols-1 md:grid-cols-7 gap-2 items-end">
+                <div class="md:col-span-2"><label class="form-label text-xs">Libellé Champ</label><input type="text" name="field_label_${fieldId}" class="form-input form-input-sm" value="${fieldData.label || ''}" placeholder="Nom Affiché"></div>
+                <div><label class="form-label text-xs">Nom Technique</label><input type="text" name="field_name_${fieldId}" class="form-input form-input-sm" value="${fieldData.name || ''}" placeholder="nom_technique"></div>
+                <div><label class="form-label text-xs">Type</label><select name="field_type_${fieldId}" class="form-select form-select-sm"><option value="text" ${fieldData.type === 'text' ? 'selected':''}>Texte</option><option value="number" ${fieldData.type === 'number' ? 'selected':''}>Nombre</option><option value="date" ${fieldData.type === 'date' ? 'selected':''}>Date</option><option value="tel" ${fieldData.type === 'tel' ? 'selected':''}>Téléphone</option><option value="select" ${fieldData.type === 'select' ? 'selected':''}>Liste</option></select></div>
+                <div><label class="form-label text-xs">Options (si Liste)</label><input type="text" name="field_options_${fieldId}" class="form-input form-input-sm" value="${(fieldData.options || []).join(',')}" placeholder="val1,val2"></div>
+                <div class="flex items-center space-x-2 pt-4">
+                    <input type="checkbox" id="fieldReq${fieldId}" name="field_required_${fieldId}" class="h-4 w-4" ${fieldData.required ? 'checked':''}><label for="fieldReq${fieldId}" class="text-xs">Requis</label>
+                    <input type="checkbox" id="fieldObs${fieldId}" name="field_obsolete_${fieldId}" class="h-4 w-4" ${fieldData.obsolete ? 'checked':''}><label for="fieldObs${fieldId}" class="text-xs">Obsolète</label>
+                </div>
+                <button type="button" class="btn btn-danger btn-xs self-end" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', newFieldHtml);
+    }
+    
+    function addDevOpCommissionTierRow(tierData = {}, container) {
+        const tierId = `tier_${Date.now()}`;
+        const newTierHtml = `
+            <div class="grid grid-cols-4 gap-2 items-center p-2 border rounded mb-2">
+                <input type="number" name="tier_from_${tierId}" class="form-input form-input-sm" value="${tierData.from || ''}" placeholder="De (Montant)">
+                <input type="number" name="tier_to_${tierId}" class="form-input form-input-sm" value="${tierData.to === Infinity ? '' : (tierData.to || '')}" placeholder="À (Montant) (vide pour infini)">
+                <input type="text" name="tier_commission_${tierId}" class="form-input form-input-sm" value="${tierData.commission || ''}" placeholder="Commission (Ex: 500 ou 1.5%)">
+                <button type="button" class="btn btn-danger btn-xs" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', newTierHtml);
+    }
+
+
+    function getDevSystemConfigContent() { return createCard('Configuration Globale du Système', 'Formulaires pour paramètres, notifications, sécurité...', 'fa-tools');}
+    function getDevErrorLogsContent() { return createCard('Journaux d\'Erreurs Système', 'Tableau des erreurs...', 'fa-bug');}
+
+
+    // --- Assignment Logic ---
+    function assignToSelf(itemId, queueType) {
+        const items = queueType === 'transactions' ? mockTransactions : mockRequests;
+        const item = items.find(i => i.id === itemId);
+        if (item && currentUserId) {
+            item.assignedTo = currentUserId;
+            item.statut = queueType === 'transactions' ? 'Assignée (validation en cours)' : 'Assignée (traitement en cours)';
+            console.log(`${queueType} ${itemId} assigned to ${users[currentUserId].name}`);
+            const currentTitle = pageTitle.textContent;
+            if(currentTitle) {
+                 if (currentUserRole === 'admin_general') {
+                    loadContent(currentTitle, () => queueType === 'transactions' ? getAdminValidationTransactionsContent('assigned_to_me') : getAdminManageRequestsContent('assigned_to_me'));
+                 } else if (currentUserRole === 'sous_admin') {
+                    loadContent(currentTitle, () => queueType === 'transactions' ? getSousAdminValidationTransactionsContent('assigned_to_me') : getSousAdminManageRequestsContent('assigned_to_me'));
+                 }
+            }
+        }
+    }
+
+    function openAssignModal(itemId, queueType) {
+        document.getElementById('taskIdToAssign').value = itemId;
+        document.getElementById('taskTypeToAssign').value = queueType;
+        const subAdminSelect = document.getElementById('subAdminSelect');
+        subAdminSelect.innerHTML = ''; 
+        Object.values(users).filter(u => u.role === 'sous_admin').forEach(sa => {
+            const option = document.createElement('option');
+            option.value = sa.id;
+            option.textContent = sa.name;
+            subAdminSelect.appendChild(option);
+        });
+        openModal('assignToSubAdminModal');
+    }
+    
+    document.getElementById('assignTaskForm')?.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const taskId = document.getElementById('taskIdToAssign').value;
+        const taskType = document.getElementById('taskTypeToAssign').value;
+        const selectedSAId = document.getElementById('subAdminSelect').value;
+        
+        const items = taskType === 'transactions' ? mockTransactions : mockRequests;
+        const item = items.find(i => i.id === taskId);
+
+        if (item && selectedSAId) {
+            item.assignedTo = selectedSAId;
+            item.statut = taskType === 'transactions' ? 'Assignée (validation en cours)' : 'Assignée (traitement en cours)';
+            console.log(`${taskType} ${taskId} assigned to ${users[selectedSAId].name}`);
+            closeModal('assignToSubAdminModal');
+            const currentTitle = pageTitle.textContent;
+            if (currentUserRole === 'admin_general') {
+                loadContent(currentTitle, () => taskType === 'transactions' ? getAdminValidationTransactionsContent('all') : getAdminManageRequestsContent('all'));
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>
